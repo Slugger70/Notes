@@ -231,7 +231,7 @@ Add the following line to the bottom of the galaxy.ini file in /mnt/galaxy/galax
 `./run.sh --pid-file=main.pid --log-file=main.log --daemon`
 
 
-Everything should work! (Except Genomespace but this can be fixed by reapplying the diff below...)
+Everything should work! (Except Genomespace but this can be fixed by reapplying the diff below...) **NOTE: This bit has yet to be tested...**
 
 ```diff
 diff --git a/client/galaxy/scripts/mvc/tool/tool-genomespace.js b/client/galaxy/scripts/mvc/tool/tool-genomespace.js
