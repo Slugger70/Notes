@@ -81,6 +81,10 @@ Change the `location /galaxy {` section so it looks like:
         }
 ```
 
+Unfortunately, Cloudman will overwrite these changes so `chmod -w` this file with to prevent it.
+
+Then restart nginx with `sudo service nginx restart`
+
 ## Stop old Galaxy
 
 Now you need to stop Galaxy (if you haven't already)...
