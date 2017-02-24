@@ -122,7 +122,7 @@ user            = galaxy
 stopsignal      = INT
 
 [program:handler]
-command         = python ./scripts/galaxy-main -c /mnt/galaxy/galaxy-app/config/galaxy.ini --server-name=handler%(process_num)s --log-file /mnt/galaxy/galaxy-app/handler%(process_num)s.log
+command         = /mnt/galaxy/galaxy-app/.venv/python /mnt/galaxy/galaxy-app/scripts/galaxy-main -c /mnt/galaxy/galaxy-app/config/galaxy.ini --server-name=handler%(process_num)s --log-file /mnt/galaxy/galaxy-app/handler%(process_num)s.log
 directory       = /mnt/galaxy/galaxy-app
 process_name    = handler%(process_num)s
 numprocs        = 2
