@@ -151,6 +151,8 @@ Now just update supervisor to get it all running..
 
 `sudo supervisorctl restart gx:*`
 
+It can be a bit more nuanced than that.. For example to just restart Galaxy's webapp: `sudo supervisroctl restart gx:galaxy` and to just restart one of the job handlers (say handler0): `sudo supervisorctl restart gx:handler0` 
+
 ## Log files
 
 Galaxy's log files are now threefold. One for the webserver app and one each for the two headless job handlers.. They are now located as follows:
