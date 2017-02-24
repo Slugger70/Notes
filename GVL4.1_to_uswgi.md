@@ -114,7 +114,7 @@ add the following:
 ```conf
 [program:galaxy]
 command         = uwsgi --plugin python --virtualenv /mnt/galaxy/galaxy-app/.venv --ini-paste /mnt/galaxy/galaxy-app/config/galaxy.ini
-directory       = /mnt/galaxy/galaxy-app/server
+directory       = /mnt/galaxy/galaxy-app
 autostart       = true
 autorestart     = true
 startsecs       = 10
@@ -123,7 +123,7 @@ stopsignal      = INT
 
 [program:handler]
 command         = python ./scripts/galaxy-main -c /mnt/galaxy/galaxy-app/config/galaxy.ini --server-name=handler%(process_num)s --log-file /mnt/galaxy/galaxy-app/handler%(process_num)s.log
-directory       = /mnt/galaxy/galaxy-app/server
+directory       = /mnt/galaxy/galaxy-app
 process_name    = handler%(process_num)s
 numprocs        = 2
 umask           = 022
