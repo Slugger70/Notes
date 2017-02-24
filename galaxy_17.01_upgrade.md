@@ -14,8 +14,8 @@ cd /mnt/galaxy/galaxy-app
 
 **Set the username and email for the git operations..**
 ```console
-git config --global user.email "slugger70@gmail.com"
-git config --global user.name "Slugger70"
+git config --global user.email "<git_user_email>"
+git config --global user.name "<git_username>"
 ```
 
 Then I did a status to see where I was at.
