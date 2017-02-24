@@ -231,4 +231,138 @@ Add the following line to the bottom of the galaxy.ini file in /mnt/galaxy/galax
 `./run.sh --pid-file=main.pid --log-file=main.log --daemon`
 
 
-Everything should work!
+Everything should work! (Except Genomespace but this can be fixed by reapplying the diff below...)
+
+```diff
+diff --git a/client/galaxy/scripts/mvc/tool/tool-genomespace.js b/client/galaxy/scripts/mvc/tool/tool-genomespace.js
+index 1606f178b..d4adff81e 100644
+--- a/client/galaxy/scripts/mvc/tool/tool-genomespace.js
++++ b/client/galaxy/scripts/mvc/tool/tool-genomespace.js
+@@ -4,7 +4,7 @@ define([], function() {
+ // tool form templates
+ return {
+     openFileBrowser: function( options ) {
+-        var GS_UPLOAD_URL = "https://gsui.genomespace.org/jsui/upload/loadUrlToGenomespace.html?getLocation=true";
++        var GS_UPLOAD_URL = "https://genomespace.genome.edu.au/jsui/upload/loadUrlToGenomespace.html?getLocation=true";
+
+         var newWin = window.open(GS_UPLOAD_URL, "GenomeSpace File Browser", "height=360px,width=600px");
+
+diff --git a/config/datatypes_conf.xml.sample b/config/datatypes_conf.xml.sample
+index a9d714cdf..159cda17f 100644
+--- a/config/datatypes_conf.xml.sample
++++ b/config/datatypes_conf.xml.sample
+@@ -395,7 +395,7 @@
+     <datatype extension="embl" type="galaxy.datatypes.data:Text" subclass="True"/>
+     <datatype extension="fitch" type="galaxy.datatypes.data:Text" subclass="True"/>
+     <datatype extension="gcg" type="galaxy.datatypes.data:Text" subclass="True"/>
+-    <datatype extension="genbank" type="galaxy.datatypes.data:Text" subclass="True" edam_format="format_1936"/>
++    <datatype extension="genbank" type="galaxy.datatypes.data:Text" subclass="True" edam_format="format_1936" display_in_upload="true"/>
+     <datatype extension="hennig86" type="galaxy.datatypes.data:Text" subclass="True"/>
+     <datatype extension="ig" type="galaxy.datatypes.data:Text" subclass="True"/>
+     <datatype extension="jackknifer" type="galaxy.datatypes.data:Text" subclass="True"/>
+diff --git a/lib/galaxy/web/form_builder.py b/lib/galaxy/web/form_builder.py
+index aa86c9cd9..13207fdbb 100644
+--- a/lib/galaxy/web/form_builder.py
++++ b/lib/galaxy/web/form_builder.py
+@@ -246,7 +246,7 @@ class GenomespaceFileField(BaseField):
+         self.value = value or ""
+
+     def get_html(self, prefix=""):
+-        return unicodify('<script src="https://gsui.genomespace.org/jsui/upload/gsuploadwindow.js"></script>'
++        return unicodify('<script src="https://genomespace.genome.edu.au/jsui/upload/gsuploadwindow.js"></script>'
+                          '<input type="text" name="{0}{1}" value="{2}">&nbsp;'
+                          '<a href="javascript:gsLocationByGet({{ successCallback: function(config)'
+                          ' {{ selector_name = \'{0}{1}\'; selector = \'input[name=\' + selector_name.replace(\'|\', \'\\\\|\') + \']\';'
+diff --git a/openid/genomespace.xml b/openid/genomespace.xml
+index 65bf95ecb..983f31807 100644
+--- a/openid/genomespace.xml
++++ b/openid/genomespace.xml
+@@ -1,6 +1,6 @@
+ <?xml version="1.0"?>
+ <provider id="genomespace" name="GenomeSpace">
+-    <op_endpoint_url>https://identity.genomespace.org/identityServer/xrd.jsp</op_endpoint_url>
++    <op_endpoint_url>https://genomespace.genome.edu.au/identityServer/xrd.jsp</op_endpoint_url>
+     <sreg>
+         <field name="nickname" required="True">
+             <use_for name="username"/>
+diff --git a/run.sh b/run.sh
+index 901d7e461..dd29d5432 100755
+--- a/run.sh
++++ b/run.sh
+@@ -1,4 +1,6 @@
+ #!/bin/sh
++export PATH=/mnt/galaxy/tools/bin:$PATH
++export PYTHON_EGG_CACHE=/mnt/galaxy/.python_eggs
+
+ cd `dirname $0`
+
+diff --git a/tool-data/all_fasta.loc.sample b/tool-data/all_fasta.loc.sample
+index 1a5a28d5e..3daaf92a7 100644
+--- a/tool-data/all_fasta.loc.sample
++++ b/tool-data/all_fasta.loc.sample
+@@ -4,13 +4,13 @@
+ #all_fasta.loc. This file has the format (white space characters are
+ #TAB characters):
+ #
+-#<unique_build_id>     <dbkey> <display_name>  <file_path>
++#<unique_build_id>     <dbkey>         <display_name>  <file_path>
+ #
+ #So, all_fasta.loc could look something like this:
+ #
+-#apiMel3       apiMel3 Honeybee (Apis mellifera): apiMel3      /path/to/genome/apiMel3/apiMel3.fa
+-#hg19canon     hg19    Human (Homo sapiens): hg19 Canonical    /path/to/genome/hg19/hg19canon.fa
+-#hg19full      hg19    Human (Homo sapiens): hg19 Full /path/to/genome/hg19/hg19full.fa
++#apiMel3       apiMel3 Honeybee (Apis mellifera): apiMel3              /path/to/genome/apiMel3/apiMel3.fa
++#hg19canon     hg19            Human (Homo sapiens): hg19 Canonical            /path/to/genome/hg19/hg19canon.fa
++#hg19full      hg19            Human (Homo sapiens): hg19 Full                 /path/to/genome/hg19/hg19full.fa
+ #
+ #Your all_fasta.loc file should contain an entry for each individual
+ #fasta file. So there will be multiple fasta files for each build,
+diff --git a/tool-data/picard_index.loc.sample b/tool-data/picard_index.loc.sample
+index d1055684e..cc326418a 100644
+--- a/tool-data/picard_index.loc.sample
++++ b/tool-data/picard_index.loc.sample
+@@ -5,13 +5,13 @@
+ #the directories in which those files are stored. The picard_index.loc
+ #file has this format (longer white space is the TAB character):
+ #
+-#<unique_build_id>     <dbkey> <display_name>  <fasta_file_path>
++#<unique_build_id>             <dbkey>         <display_name>          <fasta_file_path>
+ #
+ #So, for example, if you had hg18 indexed and stored in
+ #/depot/data2/galaxy/srma/hg18/,
+ #then the srma_index.loc entry would look like this:
+ #
+-#hg18  hg18    hg18 Pretty     /depot/data2/galaxy/picard/hg18/hg18.fa
++#hg18  hg18    hg18 Pretty             /depot/data2/galaxy/picard/hg18/hg18.fa
+ #
+ #and your /depot/data2/galaxy/srma/hg18/ directory
+ #would contain the following three files:
+diff --git a/tools/data_source/ucsc_tablebrowser.xml b/tools/data_source/ucsc_tablebrowser.xml
+index f93aca608..8dac1c17d 100644
+--- a/tools/data_source/ucsc_tablebrowser.xml
++++ b/tools/data_source/ucsc_tablebrowser.xml
+@@ -4,10 +4,10 @@
+     the initial response.  If value of 'URL_method' is 'post', any additional params coming back in the
+     initial response ( in addition to 'URL' ) will be encoded and appended to URL and a post will be performed.
+ -->
+-<tool name="UCSC Main" id="ucsc_table_direct1" tool_type="data_source" version="1.0.0">
++<tool name="UCSC Main" id="ucsc_table_direct1" tool_type="data_source">
+     <description>table browser</description>
+     <command interpreter="python">data_source.py $output $__app__.config.output_size_limit</command>
+-    <inputs action="https://genome.ucsc.edu/cgi-bin/hgTables" check_values="false" method="get">
++    <inputs action="http://ucsc.genome.edu.au/cgi-bin/hgTables" check_values="false" method="get">
+         <display>go to UCSC Table Browser $GALAXY_URL</display>
+         <param name="GALAXY_URL" type="baseurl" value="/tool_runner" />
+         <param name="tool_id" type="hidden" value="ucsc_table_direct1" />
+@@ -39,8 +39,4 @@
+         <data name="output" format="tabular" label="${tool.name} on ${organism}: ${table} (#if $description == 'range' then $getVar( 'position', 'unknown position' ) else $description#)"/>
+     </outputs>
+     <options sanitize="False" refresh="True"/>
+-    <citations>
+-        <citation type="doi">10.1093/database/bar011</citation>
+-        <citation type="doi">10.1101/gr.229102</citation>
+-    </citations>
+-</tool>
++</tool>
+```
