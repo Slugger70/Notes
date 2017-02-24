@@ -285,59 +285,7 @@ index 65bf95ecb..983f31807 100644
      <sreg>
          <field name="nickname" required="True">
              <use_for name="username"/>
-diff --git a/run.sh b/run.sh
-index 901d7e461..dd29d5432 100755
---- a/run.sh
-+++ b/run.sh
-@@ -1,4 +1,6 @@
- #!/bin/sh
-+export PATH=/mnt/galaxy/tools/bin:$PATH
-+export PYTHON_EGG_CACHE=/mnt/galaxy/.python_eggs
 
- cd `dirname $0`
-
-diff --git a/tool-data/all_fasta.loc.sample b/tool-data/all_fasta.loc.sample
-index 1a5a28d5e..3daaf92a7 100644
---- a/tool-data/all_fasta.loc.sample
-+++ b/tool-data/all_fasta.loc.sample
-@@ -4,13 +4,13 @@
- #all_fasta.loc. This file has the format (white space characters are
- #TAB characters):
- #
--#<unique_build_id>     <dbkey> <display_name>  <file_path>
-+#<unique_build_id>     <dbkey>         <display_name>  <file_path>
- #
- #So, all_fasta.loc could look something like this:
- #
--#apiMel3       apiMel3 Honeybee (Apis mellifera): apiMel3      /path/to/genome/apiMel3/apiMel3.fa
--#hg19canon     hg19    Human (Homo sapiens): hg19 Canonical    /path/to/genome/hg19/hg19canon.fa
--#hg19full      hg19    Human (Homo sapiens): hg19 Full /path/to/genome/hg19/hg19full.fa
-+#apiMel3       apiMel3 Honeybee (Apis mellifera): apiMel3              /path/to/genome/apiMel3/apiMel3.fa
-+#hg19canon     hg19            Human (Homo sapiens): hg19 Canonical            /path/to/genome/hg19/hg19canon.fa
-+#hg19full      hg19            Human (Homo sapiens): hg19 Full                 /path/to/genome/hg19/hg19full.fa
- #
- #Your all_fasta.loc file should contain an entry for each individual
- #fasta file. So there will be multiple fasta files for each build,
-diff --git a/tool-data/picard_index.loc.sample b/tool-data/picard_index.loc.sample
-index d1055684e..cc326418a 100644
---- a/tool-data/picard_index.loc.sample
-+++ b/tool-data/picard_index.loc.sample
-@@ -5,13 +5,13 @@
- #the directories in which those files are stored. The picard_index.loc
- #file has this format (longer white space is the TAB character):
- #
--#<unique_build_id>     <dbkey> <display_name>  <fasta_file_path>
-+#<unique_build_id>             <dbkey>         <display_name>          <fasta_file_path>
- #
- #So, for example, if you had hg18 indexed and stored in
- #/depot/data2/galaxy/srma/hg18/,
- #then the srma_index.loc entry would look like this:
- #
--#hg18  hg18    hg18 Pretty     /depot/data2/galaxy/picard/hg18/hg18.fa
-+#hg18  hg18    hg18 Pretty             /depot/data2/galaxy/picard/hg18/hg18.fa
- #
- #and your /depot/data2/galaxy/srma/hg18/ directory
- #would contain the following three files:
 diff --git a/tools/data_source/ucsc_tablebrowser.xml b/tools/data_source/ucsc_tablebrowser.xml
 index f93aca608..8dac1c17d 100644
 --- a/tools/data_source/ucsc_tablebrowser.xml
