@@ -10,6 +10,8 @@ source swift_venv/bin/activate
 pip3 install python-swiftclient
 ```
 
+Because python hates interoperating with anything.. hahaha.. I usually use a virtualenv and just activate it when ever I want to run swift.
+
 ## Setting openstack credential env vars.
 
 Openstack uses a bunch of environment variables to authenticate..
@@ -51,20 +53,28 @@ Common commands are:
 
 **To get a list of folders in your object store.**
 
- `swift list`
+ ```
+ swift list
+ ```
 
 **To get a list of files in a folder**
 
-`swift list <foldername>`
+```
+swift list <foldername>
+```
 
 
 **To download a file or directory**
 
-`swift download <foldername> <filename_or_directory>`
+```
+swift download <foldername> <filename_or_directory>
+```
 
 **To upload a file or directory (files are all < 4GB in size)**
 
-`swift upload <foldername> <filename_or_directory>`
+```
+swift upload <foldername> <filename_or_directory>
+```
 
 **To upload a file (some files are > 4GB in size)**
 
@@ -74,7 +84,9 @@ You need to use the -S option for uploads and specify a size in Bytes. :(
 
 e.g. TO chunk a file into 2GB pieces, use `-S 2000000000`
 
-`swift upload -S <size_in_bytes> <foldername> <filename>`
+```
+swift upload -S <size_in_bytes> <foldername> <filename>
+```
 
 ## Getting help
 
