@@ -53,3 +53,73 @@ The playbook will run.
 * Default setup is admin/admin.. Make it something sensible.
 
 **Now the grafana server is ready to go!**
+
+
+#### Configure Telegraf on Stats server to test Things
+
+Telegraf is installed as part of the playbook onto the stats server. We can get it to push data to the localhost influxdb server to test everything.
+
+Make sure the following is located at: `/etc/telegraf/telegraf.conf`
+
+```
+# Telegraf configuration
+
+[global_tags]
+
+# Configuration for telegraf agent
+[agent]
+    interval = "10s"
+    debug = false
+    hostname = "stats.genome.edu.au"
+    round_interval = true
+    flush_interval = "10s"
+    flush_jitter = "0s"
+    collection_jitter = "0s"
+    metric_batch_size = 1000
+    metric_buffer_limit = 10000
+    quiet = false
+    logfile = ""
+    omit_hostname = false
+
+###############################################################################
+#                                  OUTPUTS                                    #
+###############################################################################
+
+[[outputs.influxdb]]
+    urls = ["http://stats.genome.edu.au:8086"]
+    database = "galaxy"
+
+###############################################################################
+#                                  INPUTS                                     #
+###############################################################################
+
+[[inputs.cpu]]
+    percpu = true
+[[inputs.disk]]
+[[inputs.kernel]]
+[[inputs.processes]]
+[[inputs.io]]
+[[inputs.mem]]
+[[inputs.system]]
+[[inputs.swap]]
+[[inputs.net]]
+[[inputs.netstat]]
+```
+#### Add a dashboard and hook it up!
+
+We need to add a dashboard to display the data being collected. One has been built by Eric that is good.. We just need to import it. The file [Galaxy Node Detail-1521561338899.json](Galaxy Node Detail-1521561338899.json) can be imported to create a test setup.
+
+To import the dashboard:
+
+On the LHS menu: Click the **+ -> Create -> Import** link.
+
+Then use the **Upload JSON** button and point to the file.
+
+Once loaded, you should see stats.genome.edu.au in the host list.
+
+And data should be being collected and displayed.
+
+**Troubleshooting:**
+- Make sure Telegraf is running on the stats machine.
+- Make sure the port 8086 is open on the stats machine.
+- Make sure that Grafana and NGINX are configured properly.
