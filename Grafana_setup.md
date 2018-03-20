@@ -87,7 +87,7 @@ Make sure the following is located at: `/etc/telegraf/telegraf.conf`
 
 [[outputs.influxdb]]
     urls = ["http://stats.genome.edu.au:8086"]
-    database = "galaxy"
+    database = "telegraf"
 
 ###############################################################################
 #                                  INPUTS                                     #
@@ -123,3 +123,47 @@ And data should be being collected and displayed.
 - Make sure Telegraf is running on the stats machine.
 - Make sure the port 8086 is open on the stats machine.
 - Make sure that Grafana and NGINX are configured properly.
+
+## Step 3: Install Telegraf on machines you want to monitor.
+
+I did this on Galaxy-Mel, W1 and W2.
+
+#### Download the Telegraf client (deb package)
+
+- From https://github.com/influxdata/telegraf grab the nightly build: https://dl.influxdata.com/telegraf/nightlies/telegraf_nightly_amd64.deb
+
+- Then install it with:
+
+```bash
+sudo dpkg -i telegraf_nightly_amd64.deb
+
+```
+
+#### Configure telegraf
+
+* Edit the `/etc/telegraf/telgraf.conf` file so it looks like the one above. Except, change the **hostname** to something unique for this machine. I used:
+    * *Galaxy-mel.genome.edu.au*
+    * *Galaxy-mel.W1*
+    * *Galaxy-mel.W2*
+    * For Galaxy-mel and it's workers respectively.
+* Restart Telegraf:
+```
+sudo service telegraf restart
+```
+
+
+***Now each of the machines we just added Telegraf to will be sending data to the stats server and will be displayed.***
+
+#### Troubleshooting:
+
+* Make sure telegraf is running on each machine
+* Make sure the port `8086` is open on stats machine
+* Make sure that the telegraf config files all point to the telegraf database
+```
+...
+[[outputs.influxdb]]
+    urls = ["http://stats.genome.edu.au:8086"]
+    database = "telegraf"
+...
+```
+* Make sure telgraf service has been restarted on machines after config file changes.
