@@ -107,7 +107,7 @@ Make sure the following is located at: `/etc/telegraf/telegraf.conf`
 ```
 #### Add a dashboard and hook it up!
 
-We need to add a dashboard to display the data being collected. One has been built by Eric that is good.. We just need to import it. The file [Galaxy Node Detail-1521561338899.json](Galaxy Node Detail-1521561338899.json) can be imported to create a test setup.
+We need to add a dashboard to display the data being collected. One has been built by Eric that is good.. We just need to import it. The file [Galaxy Node Detail-1521561338899.json](./Galaxy Node Detail-1521561338899.json) can be imported to create a test setup.
 
 To import the dashboard:
 
