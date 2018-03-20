@@ -119,9 +119,10 @@ Once loaded, you should see stats.genome.edu.au in the host list.
 
 And data should be being collected and displayed.
 
-**Troubleshooting:**
+#### Troubleshooting:
+
 - Make sure Telegraf is running on the stats machine.
-- Make sure the port 8086 is open on the stats machine.
+- Make sure the port `8086` is open on the stats machine.
 - Make sure that Grafana and NGINX are configured properly.
 
 ## Step 3: Install Telegraf on machines you want to monitor.
@@ -159,11 +160,65 @@ sudo service telegraf restart
 * Make sure telegraf is running on each machine
 * Make sure the port `8086` is open on stats machine
 * Make sure that the telegraf config files all point to the telegraf database
+
 ```
-...
 [[outputs.influxdb]]
     urls = ["http://stats.genome.edu.au:8086"]
     database = "telegraf"
-...
+
 ```
 * Make sure telgraf service has been restarted on machines after config file changes.
+
+
+## Galaxy server monitoring
+
+Monitoring of Galaxy queue, UI response times, jobs and job status etc. This requires a bit more of a complex setup.
+
+* We need to add a couple of lines to the end Galaxy head node's telegraf config file. (The `statsd` input plugin for telegraf uses port `8125` by default and so we will tell Galaxy about it in a later step.)
+
+```
+[[inputs.statsd]]
+  metrics_separator="."
+```
+* Restart telegraf `sudo service telegraf restart`
+
+* Add the following lines to `galaxy.ini`
+
+```
+statsd_host = localhost
+statsd_port = 8125
+statsd_prefix = galaxy-mel
+```
+
+* Restart Galaxy (the web services will do, but for Galaxy-Mel I had to restart Galaxy)
+
+* Now we need to setup some custom scripts that will poll the queue system etc. Checkout https://github.com/usegalaxy-eu/galaxy-playbook-temporary/tree/master/roles/monitoring
+* In the ubuntu user directory I've created a `stats` dir.
+* Inside this are a couple of files we need. `secret.yml` and `galaxy_queue_size.py`
+* We need to create a python venv called `stats_venv` and install some packages.
+
+```
+virtualenv stats_venv
+source stats_venv/bin/activate
+pip install psycopg2 influxdb pyyaml
+```
+
+* Make sure the `python` used in the `!#` points to the one in the virtualenv.
+* Make the following cron job with `crontab -e`
+
+```
+* * * * * /home/ubuntu/stats/stats_venv/bin/python /home/ubuntu/stats/galaxy_queue_size.py main
+```
+
+
+Phew! Nearly done. Now we can create a new Dashboard in Grafana
+
+#### Create a new dashboard in Grafana.
+
+* Go back to the Grafana server.
+* Import a new dashboard using the file [Galaxy-1521564452764.json](Galaxy-1521564452764.json)
+* Should be all working at this point!
+
+## Play around!
+
+Can play around with monitoring, more dashboards, additional monitoring etc!
