@@ -1,0 +1,140 @@
+- hosts: my_hosts
+
+  vars:
+    app_dir: "/mnt/gvl/apps"
+  # set some environment variables for the install
+  environment:
+    TEMPDIR: "/mnt/transient_nfs"
+    TEMP: "/mnt/transient_nfs"
+
+  tasks:
+# copy across the .sh file to add the correct pathing to the profile.d directory so users can access the software correctly.
+  - name: Copy the broad_profile.sh file to /etc/profile.d
+    copy: src=files/zz_broad_profile.sh dest=/etc/profile.d/zz_broad_profile.sh owner=ubuntu
+    sudo: yes
+    sudo_user: root
+
+# give ubuntu the ownership of the app_dir
+  - name: Give ubuntu the ownership of the app_dir
+    command: "sudo chown -R ubuntu:ubuntu {{ app_dir }}"
+    sudo: yes
+    sudo_user: ubuntu
+
+# Install the software required for the workshop. We need GATK 3.5 and some R modules. Everything else is already installed and requires some environment variables.
+  - name: Download GATK 3.5
+    get_url: url="https://swift.rc.nectar.org.au:8888/v1/AUTH_377/public/GenomeAnalysisTK-3.5.tar.bz2" dest=/mnt/transient_nfs/GenomeAnalysisTK-3.5.tar.bz2
+    sudo: yes
+    sudo_user: ubuntu
+
+  - name: Create GATK jar directory in app_dir
+    file: dest="{{ app_dir }}/GATK3.5" state=directory owner=ubuntu
+    sudo: yes
+    sudo_user: ubuntu
+
+  - name: Unarchive GATK 3.5 into app_dir
+    unarchive: src="/mnt/transient_nfs/GenomeAnalysisTK-3.5.tar.bz2" dest="{{ app_dir }}/GATK3.5" copy=no
+
+  #The environment variable for GATK is created during user login the profile.sh file we copied earlier.
+
+# Download the workshop data from the object store and unzip it into the researchers home directory
+  # First create a directory in the researchers home dir called workshop_data
+  - name: Create a workshop_data dir
+    file: dest="/mnt/galaxy/home/researcher/workshop_data" state=directory owner=researcher mode=0775
+    sudo: yes
+    sudo_user: root
+
+  #Now download the workshop data
+  - name: Download the workshop data
+    get_url: url="https://swift.rc.nectar.org.au:8888/v1/AUTH_377/public/workshop_AUS16.zip" dest=/mnt/transient_nfs/workshop_AUS16.zip
+    sudo: yes
+    sudo_user: root
+
+  #Unzip the workshop_data into the directory
+  - name: Unzip the workshop data
+    unarchive: src="/mnt/transient_nfs/workshop_AUS16.zip" dest="/mnt/galaxy/home/researcher/workshop_data/" copy=no
+    sudo: yes
+    sudo_user: root
+
+  - name: Chown the workshop data to researcher:researcher
+    command: "sudo chown -R researcher:researcher /mnt/galaxy/home/researcher/workshop_data"
+    sudo: yes
+    sudo_user: ubuntu
+
+  #Now we need to install some R libraries. Using a script from: http://adamj.eu/tech/2014/07/19/installing-and-removing-r-packages-with-ansible/
+
+  - name: Add some R packages.
+    command: >
+      Rscript --slave --no-save --no-restore-history -e "if (! ('{{ item }}' %in% installed.packages()[,'Package'])) { install.packages(pkgs='{{ item }}', repos=c('http://cran.ms.unimelb.edu.au/')); print('Added'); } else { print('Already installed'); }"
+    register: r_result
+    failed_when: "r_result.rc != 0 or 'had non-zero exit status' in r_result.stderr"
+    changed_when: "'Added' in r_result.stdout"
+    with_items:
+      - ggplot2
+      - reshape
+      - gplots
+      - gsalib
+    sudo: yes
+    sudo_user: root
+
+  #get and install IGV on the vnc desktop for these machines.
+  - name: Download IGV locally
+    get_url: url="https://swift.rc.nectar.org.au:8888/v1/AUTH_377/public/IGV_2.3.67.zip" dest=/mnt/transient_nfs/IGV_2.3.67.zip
+    sudo: yes
+    sudo_user: ubuntu
+
+  - name: make an IGV directory
+    file: dest="{{ app_dir }}/IGV" state=directory owner=ubuntu
+    sudo: yes
+    sudo_user: ubuntu
+
+  - name: Unarchive IGV to app_dir
+    unarchive: src=/mnt/transient_nfs/IGV_2.3.67.zip dest="{{ app_dir }}/IGV" copy=no
+
+    #Make a vnc desktop link to start it up
+  - name: Copy files to deskop
+    copy: src="files/Desktop/IGV.desktop" dest="/mnt/galaxy/home/researcher/Desktop/IGV.desktop" owner="researcher" mode="ug+rwx"
+    sudo: yes
+    sudo_user: root
+
+# Now do the cromwell bit..
+#First get and untar java8.
+  - name: Download the jre version 1.8 from the object store.
+    get_url: url="https://swift.rc.nectar.org.au:8888/v1/AUTH_377/public/jre-8u71-linux-x64.gz" dest="/mnt/gvl/apps"
+    sudo: yes
+    sudo_user: ubuntu
+
+  - name: Untar the jre
+    unarchive: src="/mnt/gvl/apps/jre-8u71-linux-x64.gz" dest="/mnt/gvl/apps" copy=no
+
+  - name: Create a link to java vesion 8 in the /usr/bin dir
+    command: sudo ln -s {{ app_dir }}/jre1.8.0_71/bin/java /usr/bin/java8
+    sudo: yes
+    sudo_user: ubuntu
+
+#Create a dir for cromwell and download it there.
+  - name: Create cromwell dir
+    file: dest="{{ app_dir }}/cromwell" state=directory owner=ubuntu
+    sudo: yes
+    sudo_user: ubuntu
+
+  - name: Download cromwell
+    get_url: url="https://swift.rc.nectar.org.au:8888/v1/AUTH_377/public/cromwell-0.16.jar" dest="{{ app_dir }}/cromwell/cromwell-0.16.jar"
+    sudo: yes
+    sudo_user: ubuntu
+
+
+  #Alter the VNC geometry to suit higher res apps.
+  - name: Change the vnc resolution.
+    shell: sudo sed "s/-geometry 1024x768/-geometry 1440x900/" /etc/xinetd.d/vnc > /etc/xinetd.d/1.txt
+    sudo: yes
+    sudo_user: root
+
+  - name: Overwrite old vnc setup
+    command: mv /etc/xinetd.d/1.txt /etc/xinetd.d/vnc
+    sudo: yes
+    sudo_user: root
+
+  - name: restart xinetd
+    command: service xinetd restart
+    sudo: yes
+    sudo_user: root

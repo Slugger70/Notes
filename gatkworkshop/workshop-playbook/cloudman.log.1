@@ -1,0 +1,236 @@
+Python version:  (2, 7)
+2018-03-09 00:05:28,700 DEBUG            app:81   Initializing app
+2018-03-09 00:05:28,701 DEBUG            ec2:115  Gathering instance zone, attempt 1
+2018-03-09 00:05:28,724 DEBUG            ec2:121  Instance zone is 'melbourne-np'
+2018-03-09 00:05:28,725 DEBUG            ec2:44   Gathering instance ami, attempt 1
+2018-03-09 00:05:28,738 DEBUG            app:84   Running on 'openstack' type of cloud in zone 'melbourne-np' using image 'ami-bb918743'.
+2018-03-09 00:05:28,738 DEBUG            app:107  Looking for existing cluster persistent data (PD).
+2018-03-09 00:05:28,738 DEBUG      openstack:99   Establishing a boto Swift connection.
+2018-03-09 00:05:28,739 DEBUG      openstack:109  Got boto Swift connection.
+2018-03-09 00:05:32,431 DEBUG           misc:205  Checking if bucket 'cm-72b8697de6a86f3c461558e915fb61e0' exists... it does not.
+2018-03-09 00:05:32,431 DEBUG           misc:613  Bucket 'cm-72b8697de6a86f3c461558e915fb61e0' does not exist, did not get remote file 'persistent_data.yaml'
+2018-03-09 00:05:32,431 DEBUG            app:126  No PD to go by. Setting deployment_version to 2.
+2018-03-09 00:05:32,432 DEBUG            app:133  Master process starting.
+2018-03-09 00:05:34,056 DEBUG         master:52   Initializing console manager - cluster start time: 2018-03-09 00:05:34.056916
+2018-03-09 00:05:34,057 DEBUG           comm:30   Setting up a new AMQP connection
+2018-03-09 00:05:35,481 DEBUG     connection:661  Start from server, version: 8.0, properties: {u'information': u'Licensed under the MPL.  See http://www.rabbitmq.com/', u'product': u'RabbitMQ', u'copyright': u'Copyright (C) 2007-2015 Pivotal Software, Inc.', u'capabilities': {}, u'cluster_name': u'rabbit@r-4nlmymqy-0.novalocal', u'platform': u'Erlang/OTP', u'version': u'3.5.7'}, mechanisms: [u'PLAIN', u'AMQPLAIN'], locales: [u'en_US']
+2018-03-09 00:05:35,482 DEBUG     connection:507  Open OK! known_hosts []
+2018-03-09 00:05:35,482 DEBUG           comm:33   Established a new AMQP connection
+2018-03-09 00:05:35,482 DEBUG        channel:70   using channel_id: 1
+2018-03-09 00:05:35,483 DEBUG        channel:484  Channel open
+2018-03-09 00:05:35,487 DEBUG           comm:44   Successfully established AMQP connection channel with ID 1
+2018-03-09 00:05:35,488 DEBUG         master:988  Trying to discover any worker instances associated with this cluster...
+2018-03-09 00:05:35,488 DEBUG      openstack:60   Establishing a boto Nova connection
+2018-03-09 00:05:35,489 DEBUG      openstack:64   Testing the new boto Nova connection (EC2Connection:nova.rc.nectar.org.au)
+2018-03-09 00:05:35,710 DEBUG      openstack:67   Got boto Nova connection for region melbourne
+2018-03-09 00:05:37,326 DEBUG            ec2:82   Gathering instance id, attempt 1
+2018-03-09 00:05:37,342 DEBUG            ec2:88   Instance ID is 'i-b6c63ab5'
+2018-03-09 00:05:38,931 DEBUG      openstack:148  Adding tag 'clusterName:long_reads-0' to resource 'i-b6c63ab5'
+2018-03-09 00:05:39,053 DEBUG      openstack:148  Adding tag 'role:master' to resource 'i-b6c63ab5'
+2018-03-09 00:05:39,151 DEBUG      openstack:148  Adding tag 'Name:master: long_reads-0' to resource 'i-b6c63ab5'
+2018-03-09 00:05:39,238 DEBUG       registry:164  Initiating loading of services
+2018-03-09 00:05:39,238 DEBUG       registry:128  Loading service class in module 'cm/services/autoscale.py'
+2018-03-09 00:05:39,654 DEBUG       registry:145  Importing service name AutoscaleService as module cm.services.autoscale
+2018-03-09 00:05:39,657 DEBUG       registry:170  Loaded service Autoscale
+2018-03-09 00:05:39,658 DEBUG       registry:128  Loading service class in module 'cm/services/apps/galaxy.py'
+2018-03-09 00:05:40,717 DEBUG       registry:145  Importing service name GalaxyService as module cm.services.apps.galaxy
+2018-03-09 00:05:40,729 DEBUG       registry:170  Loaded service Galaxy
+2018-03-09 00:05:40,729 DEBUG       registry:128  Loading service class in module 'cm/services/apps/galaxyreports.py'
+2018-03-09 00:05:40,735 DEBUG       registry:145  Importing service name GalaxyReportsService as module cm.services.apps.galaxyreports
+2018-03-09 00:05:40,765 DEBUG       registry:170  Loaded service GalaxyReports
+2018-03-09 00:05:40,765 DEBUG       registry:128  Loading service class in module 'cm/services/apps/htcondor.py'
+2018-03-09 00:05:40,798 DEBUG       registry:145  Importing service name HTCondorService as module cm.services.apps.htcondor
+2018-03-09 00:05:40,815 DEBUG       htcondor:24   Condor is preparing
+2018-03-09 00:05:40,815 DEBUG       registry:170  Loaded service HTCondor
+2018-03-09 00:05:40,815 DEBUG       registry:128  Loading service class in module 'cm/services/apps/postgres.py'
+2018-03-09 00:05:40,823 DEBUG       registry:145  Importing service name PostgresService as module cm.services.apps.postgres
+2018-03-09 00:05:40,838 DEBUG       registry:170  Loaded service Postgres
+2018-03-09 00:05:40,838 DEBUG       registry:128  Loading service class in module 'cm/services/apps/nodejsproxy.py'
+2018-03-09 00:05:40,853 DEBUG       registry:145  Importing service name NodejsProxyService as module cm.services.apps.nodejsproxy
+2018-03-09 00:05:40,855 DEBUG       registry:170  Loaded service NodeJSProxy
+2018-03-09 00:05:40,855 DEBUG       registry:128  Loading service class in module 'cm/services/apps/nginx.py'
+2018-03-09 00:05:40,920 DEBUG       registry:145  Importing service name NginxService as module cm.services.apps.nginx
+2018-03-09 00:05:40,983 DEBUG           misc:850  '/usr/sbin/nginx -t && /usr/sbin/nginx -t 2>&1 | head -n 1 | cut -d' ' -f5' command OK
+2018-03-09 00:05:41,044 DEBUG           misc:850  '/usr/sbin/nginx -t && /usr/sbin/nginx -t 2>&1 | head -n 1 | cut -d' ' -f5' command OK
+2018-03-09 00:05:41,044 DEBUG       registry:170  Loaded service Nginx
+2018-03-09 00:05:41,045 DEBUG       registry:128  Loading service class in module 'cm/services/apps/hadoop.py'
+2018-03-09 00:05:41,133 DEBUG       registry:145  Importing service name HadoopService as module cm.services.apps.hadoop
+2018-03-09 00:05:41,143 DEBUG       registry:170  Loaded service Hadoop
+2018-03-09 00:05:41,143 DEBUG       registry:128  Loading service class in module 'cm/services/apps/proftpd.py'
+2018-03-09 00:05:41,147 DEBUG       registry:145  Importing service name ProFTPdService as module cm.services.apps.proftpd
+2018-03-09 00:05:41,149 DEBUG        proftpd:26   Initializing ProFTPdService
+2018-03-09 00:05:41,149 DEBUG       registry:170  Loaded service ProFTPd
+2018-03-09 00:05:41,149 DEBUG       registry:128  Loading service class in module 'cm/services/apps/cloudgene.py'
+2018-03-09 00:05:41,154 DEBUG       registry:145  Importing service name CloudgeneService as module cm.services.apps.cloudgene
+2018-03-09 00:05:41,155 DEBUG       registry:170  Loaded service Cloudgene
+2018-03-09 00:05:41,155 DEBUG       registry:128  Loading service class in module 'cm/services/apps/migration.py'
+2018-03-09 00:05:41,172 DEBUG       registry:145  Importing service name MigrationService as module cm.services.apps.migration
+2018-03-09 00:05:41,176 DEBUG       registry:170  Loaded service Migration
+2018-03-09 00:05:41,176 DEBUG       registry:128  Loading service class in module 'cm/services/apps/supervisor.py'
+2018-03-09 00:05:41,230 DEBUG       registry:145  Importing service name SupervisorService as module cm.services.apps.supervisor
+2018-03-09 00:05:41,233 DEBUG       registry:170  Loaded service Supervisor
+2018-03-09 00:05:41,233 DEBUG       registry:128  Loading service class in module 'cm/services/apps/pss.py'
+2018-03-09 00:05:41,242 DEBUG       registry:145  Importing service name PSSService as module cm.services.apps.pss
+2018-03-09 00:05:41,244 DEBUG            pss:29   Configured PSS as master
+2018-03-09 00:05:41,244 DEBUG       registry:170  Loaded service PSS
+2018-03-09 00:05:41,245 DEBUG       registry:128  Loading service class in module 'cm/services/apps/clouderamanager.py'
+2018-03-09 00:05:42,202 DEBUG       registry:145  Importing service name ClouderaManagerService as module cm.services.apps.clouderamanager
+2018-03-09 00:05:43,974 DEBUG            ec2:242  Gathering instance local hostname, attempt 1
+2018-03-09 00:05:43,990 DEBUG       registry:170  Loaded service ClouderaManager
+2018-03-09 00:05:43,991 DEBUG       registry:128  Loading service class in module 'cm/services/apps/pulsar.py'
+2018-03-09 00:05:43,996 DEBUG       registry:145  Importing service name PulsarService as module cm.services.apps.pulsar
+2018-03-09 00:05:43,999 DEBUG       registry:170  Loaded service Pulsar
+2018-03-09 00:05:43,999 DEBUG       registry:128  Loading service class in module 'cm/services/apps/jobmanagers/sge.py'
+2018-03-09 00:05:44,034 DEBUG       registry:145  Importing service name SGEService as module cm.services.apps.jobmanagers.sge
+2018-03-09 00:05:44,043 DEBUG       registry:170  Loaded service SGE
+2018-03-09 00:05:44,044 DEBUG       registry:128  Loading service class in module 'cm/services/apps/jobmanagers/slurmd.py'
+2018-03-09 00:05:44,047 DEBUG       registry:145  Importing service name SlurmdService as module cm.services.apps.jobmanagers.slurmd
+2018-03-09 00:05:44,048 DEBUG       registry:170  Loaded service Slurmd
+2018-03-09 00:05:44,048 DEBUG       registry:128  Loading service class in module 'cm/services/apps/jobmanagers/slurmctld.py'
+2018-03-09 00:05:44,618 DEBUG       registry:145  Importing service name SlurmctldService as module cm.services.apps.jobmanagers.slurmctld
+2018-03-09 00:05:44,623 DEBUG          paths:230  Warning: Returning default transient file system path
+2018-03-09 00:05:44,623 DEBUG       registry:170  Loaded service Slurmctld
+2018-03-09 00:05:44,623 DEBUG         master:2489 Loaded services: {'Supervisor': Supervisor, 'NodeJSProxy': NodeJSProxy, 'Postgres': Postgres, 'Pulsar': Pulsar, 'ProFTPd': ProFTPd, 'GalaxyReports': Galaxy Reports service on port 9001, 'Hadoop': Hadoop, 'ClouderaManager': ClouderaManager, 'Slurmd': Slurmd, 'Nginx': Nginx, 'HTCondor': HTCondor, 'Migration': Migration, 'PSS': PSS, 'Autoscale': Autoscale, 'SGE': SGE, 'Cloudgene': Cloudgene, 'Galaxy': Galaxy, 'Slurmctld': Slurmctld}
+2018-03-09 00:05:44,624 DEBUG         master:2830 Starting __monitor thread
+2018-03-09 00:05:44,638 DEBUG           base:57   Enabling 'root' controller, class: CM
+2018-03-09 00:05:44,639 DEBUG         master:364  Config Data at manager start (with the following keys filtered out ['password', 'freenxpass', 'access_key', 'secret_key']): {'static_images_dir': 'static/images', 'cluster_templates': [{'filesystem_templates': [{'data_source': 'archive', 'archive_md5': '7c252fd983b52fcc358c62895b22eed4', 'name': 'galaxy', 'roles': 'galaxyTools,galaxyData', 'archive_url': 'https://swift.rc.nectar.org.au:8888/v1/AUTH_377/cloudman-gvl-430/filesystems/gvl-galaxyfs-4.3.0.tar.gz', 'type': 'transient'}, {'type': 'cvmfs', 'mount_pont': '/cvmfs/data.galaxyproject.org', 'roles': 'galaxyIndices', 'name': 'galaxyIndices'}], 'name': 'Galaxy'}, {'filesystem_templates': [{'type': 'volume', 'name': 'galaxy'}], 'name': 'Data'}], 'is_secure': True, 's3_port': 8888, 'cloud_type': 'openstack', 'static_cache_time': '360', 'debug': 'true', 'initial_cluster_type': 'Galaxy', 'static_scripts_dir': 'static/scripts', 'cluster_name': 'long_reads-0', 'role': 'master', 'bucket_cluster': 'cm-72b8697de6a86f3c461558e915fb61e0', 'boot_script_path': '/opt/cloudman/boot', 'ec2_conn_path': '/services/Cloud', 'region_name': 'melbourne', 'cidr_range': '115.146.92.0/22', 'region_endpoint': 'nova.rc.nectar.org.au', 'ec2_port': 8773, 'static_favicon_dir': 'static/favicon.ico', 'use_translogger': 'False', 'boot_script_name': 'cm_boot.py', 'log_level': 'DEBUG', 'use_lint': 'false', 'cloudman_file_name': 'cm.tar.gz', 'gvl_config': {'install': ['gvl_cmdline_utilities']}, 'global_conf': {'__file__': '/mnt/cm/cm_wsgi.ini', 'here': '/mnt/cm'}, 'template_path': 'templates', 'cloud_name': 'NeCTAR', 'static_dir': 'static', 'static_style_dir': 'static/style', 'cloudman_home': '/mnt/cm', 'post_start_script_url': 'file:///opt/gvl/scripts/triggers;file:///mnt/galaxy/gvl/poststart.d', 'bucket_default': 'cloudman-gvl-430', 's3_host': 'swift.rc.nectar.org.au', 's3_conn_path': '/', 'static_enabled': 'True'}
+2018-03-09 00:05:44,642 DEBUG       buildapp:93   Enabling 'httpexceptions' middleware
+2018-03-09 00:05:44,642 DEBUG         master:2342 Generating root user's public key...
+2018-03-09 00:05:44,678 DEBUG       buildapp:99   Enabling 'recursive' middleware
+2018-03-09 00:05:44,765 DEBUG       buildapp:119  Enabling 'print debug' middleware
+2018-03-09 00:05:44,945 DEBUG       buildapp:133  Enabling 'error' middleware
+2018-03-09 00:05:44,946 DEBUG         master:2345 Successfully generated root user's public key.
+2018-03-09 00:05:44,946 DEBUG       buildapp:143  Enabling 'config' middleware
+2018-03-09 00:05:44,947 DEBUG       buildapp:147  Enabling 'x-forwarded-host' middleware
+2018-03-09 00:05:45,394 DEBUG         master:2353 Successfully retrieved root user's public key from file.
+Starting server in PID 2240.2018-03-09 00:05:45,395 DEBUG         master:117  Activating service Migration
+
+2018-03-09 00:05:45,395 DEBUG         master:161  ADD dependencies for service Migration
+2018-03-09 00:05:45,395 DEBUG         master:117  Activating service Nginx
+2018-03-09 00:05:45,396 DEBUG         master:161  ADD dependencies for service Nginx
+2018-03-09 00:05:45,396 DEBUG         master:117  Activating service Supervisor
+2018-03-09 00:05:45,396 DEBUG         master:161  ADD dependencies for service Supervisor
+2018-03-09 00:05:45,397 DEBUG         master:394  Running on Ubuntu 16.04; using Slurm as the cluster job manager
+2018-03-09 00:05:45,397 DEBUG         master:117  Activating service Slurmctld
+2018-03-09 00:05:45,397 DEBUG         master:161  ADD dependencies for service Slurmctld
+2018-03-09 00:05:45,398 DEBUG         master:117  Activating service Slurmd
+2018-03-09 00:05:45,398 DEBUG         master:161  ADD dependencies for service Slurmd
+2018-03-09 00:05:45,398 DEBUG       registry:99   Removing service SGE from the registry
+2018-03-09 00:05:45,398 DEBUG       registry:99   Removing service Hadoop from the registry
+2018-03-09 00:05:45,398 DEBUG     filesystem:33   Instantiating Filesystem object transient_nfs with service roles: 'TransientNFS'
+2018-03-09 00:05:45,398 DEBUG     filesystem:605  Configuring instance transient storage at /mnt/transient_nfs with NFS.
+2018-03-09 00:05:45,398 DEBUG         master:111  Adding a new file system service into the registry: transient_nfs
+2018-03-09 00:05:45,398 DEBUG       registry:111  Registering service transient_nfs with the registry
+2018-03-09 00:05:45,398 DEBUG         master:117  Activating service transient_nfs
+2018-03-09 00:05:45,398 DEBUG         master:161  ADD dependencies for service transient_nfs
+2018-03-09 00:05:45,399 DEBUG         master:117  Activating service PSS
+2018-03-09 00:05:45,399 DEBUG         master:161  ADD dependencies for service PSS
+2018-03-09 00:05:45,399 DEBUG       registry:99   Removing service HTCondor from the registry
+2018-03-09 00:05:45,399 DEBUG         master:485  Checking for and adding any previously defined cluster services
+2018-03-09 00:05:45,399 DEBUG         master:1010 Trying to discover any volumes attached to this instance...
+serving on 0.0.0.0:42284 view at http://127.0.0.1:42284
+2018-03-09 00:05:46,315 DEBUG         master:1027 Attached volumes: []
+2018-03-09 00:05:46,315 DEBUG         master:548  There are no pre-configured filesystems; continuing.
+2018-03-09 00:05:46,315 DEBUG         master:564  Activating previously-available application services from an existing cluster config.
+2018-03-09 00:05:46,315 DEBUG         master:1389 initialize_cluster_with_custom_settings: cluster_type=Galaxy, storage_type=transient, storage_size=0
+2018-03-09 00:05:46,315 INFO          master:1432 Initializing 'Galaxy' cluster type with storage type 'transient'. Please wait...
+2018-03-09 00:05:46,316 DEBUG         master:1489 Checking for cluster template definitions.
+2018-03-09 00:05:46,316 DEBUG         master:1501 Using cluster template Galaxy with the following file system templates: [{'data_source': 'archive', 'archive_md5': '7c252fd983b52fcc358c62895b22eed4', 'name': 'galaxy', 'roles': 'galaxyTools,galaxyData', 'archive_url': 'https://swift.rc.nectar.org.au:8888/v1/AUTH_377/cloudman-gvl-430/filesystems/gvl-galaxyfs-4.3.0.tar.gz', 'type': 'transient'}, {'type': 'cvmfs', 'mount_pont': '/cvmfs/data.galaxyproject.org', 'roles': 'galaxyIndices', 'name': 'galaxyIndices'}]
+2018-03-09 00:05:46,316 DEBUG         master:1517 Processing file system templates: [{'data_source': 'archive', 'archive_md5': '7c252fd983b52fcc358c62895b22eed4', 'name': 'galaxy', 'roles': 'galaxyTools,galaxyData', 'archive_url': 'https://swift.rc.nectar.org.au:8888/v1/AUTH_377/cloudman-gvl-430/filesystems/gvl-galaxyfs-4.3.0.tar.gz', 'type': 'transient'}, {'type': 'cvmfs', 'mount_pont': '/cvmfs/data.galaxyproject.org', 'roles': 'galaxyIndices', 'name': 'galaxyIndices'}]
+2018-03-09 00:05:46,316 DEBUG         master:1010 Trying to discover any volumes attached to this instance...
+2018-03-09 00:05:47,219 DEBUG         master:1027 Attached volumes: []
+2018-03-09 00:05:47,219 DEBUG         master:1521 Processing file system template galaxy: {'data_source': 'archive', 'archive_md5': '7c252fd983b52fcc358c62895b22eed4', 'name': 'galaxy', 'roles': 'galaxyTools,galaxyData', 'archive_url': 'https://swift.rc.nectar.org.au:8888/v1/AUTH_377/cloudman-gvl-430/filesystems/gvl-galaxyfs-4.3.0.tar.gz', 'type': 'transient'}
+2018-03-09 00:05:47,219 DEBUG     filesystem:33   Instantiating Filesystem object galaxy with service roles: 'galaxyTools,galaxyData'
+2018-03-09 00:05:47,219 DEBUG         master:1576 Creating a transient file system named 'galaxy'
+2018-03-09 00:05:47,219 DEBUG     filesystem:605  Configuring instance transient storage at /mnt/galaxy with NFS.
+2018-03-09 00:05:47,219 DEBUG         master:111  Adding a new file system service into the registry: galaxy
+2018-03-09 00:05:47,220 DEBUG       registry:111  Registering service galaxy with the registry
+2018-03-09 00:05:47,220 DEBUG         master:117  Activating service galaxy
+2018-03-09 00:05:47,220 DEBUG         master:161  ADD dependencies for service galaxy
+2018-03-09 00:05:47,220 DEBUG         master:1521 Processing file system template galaxyIndices: {'type': 'cvmfs', 'mount_pont': '/cvmfs/data.galaxyproject.org', 'roles': 'galaxyIndices', 'name': 'galaxyIndices'}
+2018-03-09 00:05:47,220 DEBUG     filesystem:33   Instantiating Filesystem object galaxyIndices with service roles: 'galaxyIndices'
+2018-03-09 00:05:47,220 DEBUG         master:1571 Adding a CVMFS-based file system named galaxyIndices
+2018-03-09 00:05:47,220 DEBUG     filesystem:628  Adding CVMFS file system galaxyIndices
+2018-03-09 00:05:47,220 DEBUG         master:111  Adding a new file system service into the registry: galaxyIndices
+2018-03-09 00:05:47,220 DEBUG       registry:111  Registering service galaxyIndices with the registry
+2018-03-09 00:05:47,220 DEBUG         master:117  Activating service galaxyIndices
+2018-03-09 00:05:47,220 DEBUG         master:161  ADD dependencies for service galaxyIndices
+2018-03-09 00:05:47,220 DEBUG         master:117  Activating service Postgres
+2018-03-09 00:05:47,221 DEBUG         master:161  ADD dependencies for service Postgres
+2018-03-09 00:05:47,221 DEBUG         master:117  Activating service ProFTPd
+2018-03-09 00:05:47,221 DEBUG         master:161  ADD dependencies for service ProFTPd
+2018-03-09 00:05:47,221 DEBUG         master:117  Activating service Galaxy
+2018-03-09 00:05:47,221 DEBUG         master:161  ADD dependencies for service Galaxy
+2018-03-09 00:05:47,221 DEBUG         master:117  Activating service GalaxyReports
+2018-03-09 00:05:47,221 DEBUG         master:161  ADD dependencies for service GalaxyReports
+2018-03-09 00:05:47,221 DEBUG         master:117  Activating service NodeJSProxy
+2018-03-09 00:05:47,221 DEBUG         master:161  ADD dependencies for service NodeJSProxy
+2018-03-09 00:05:47,222 DEBUG            ec2:223  Gathering instance private IP, attempt 1
+2018-03-09 00:05:47,298 DEBUG           misc:850  'cp /etc/hosts /etc/hosts.orig' command OK
+2018-03-09 00:05:47,306 DEBUG           misc:850  'cp /tmp/tmpcos0yC /etc/hosts' command OK
+2018-03-09 00:05:47,314 DEBUG           misc:850  'chmod 644 /etc/hosts' command OK
+2018-03-09 00:05:47,315 DEBUG           misc:1095 Added the following line to /etc/hosts: 115.146.92.168 r-4nlmymqy-0.novalocal r-4nlmymqy-0 master
+
+2018-03-09 00:05:47,315 INFO          master:462  Completed the initial cluster startup process. Configuring a predefined cluster of type Galaxy.
+2018-03-09 00:05:47,315 DEBUG         master:2835 Monitor started; manager started
+2018-03-09 00:05:52,317 DEBUG     supervisor:46   Socket error connecting to supervisord: [Errno 99] Cannot assign requested address
+2018-03-09 00:05:52,318 DEBUG     supervisor:46   Socket error connecting to supervisord: [Errno 99] Cannot assign requested address
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/usr/lib/python2.7/threading.py", line 754, in run
+    self.__target(*self.__args, **self.__kwargs)
+  File "/mnt/cm/cm/master.py", line 2854, in __monitor
+    service.status()
+  File "/mnt/cm/cm/services/data/filesystem.py", line 535, in status
+    fs.status()
+  File "/mnt/cm/cm/services/data/cvmfs.py", line 42, in status
+    if os.listdir(self.fs.mount_point):
+OSError: [Errno 2] No such file or directory: '/mnt/galaxyIndices'
+
+2018-03-09 00:08:43,368 DEBUG         master:2239 Checking for new version of CloudMan
+2018-03-09 00:08:43,368 DEBUG           misc:736  Getting metadata 'revision' for file 'cm.tar.gz' from bucket 'cm-72b8697de6a86f3c461558e915fb61e0'
+2018-03-09 00:08:43,706 DEBUG           misc:205  Checking if bucket 'cm-72b8697de6a86f3c461558e915fb61e0' exists... it does not.
+2018-03-09 00:08:43,706 DEBUG           misc:242  Attempted to get bucket cm-72b8697de6a86f3c461558e915fb61e0 but it doesn't exist.
+2018-03-09 00:08:43,707 DEBUG           misc:736  Getting metadata 'revision' for file 'cm.tar.gz' from bucket 'cloudman-gvl-430'
+2018-03-09 00:08:44,035 DEBUG           misc:205  Checking if bucket 'cloudman-gvl-430' exists... it does not.
+2018-03-09 00:08:44,035 DEBUG           misc:242  Attempted to get bucket cloudman-gvl-430 but it doesn't exist.
+2018-03-09 00:08:44,035 DEBUG         master:2246 Revision number for user's CloudMan: 'None'; revision number for default CloudMan: 'None'
+2018-03-09 00:08:44,035 DEBUG         config:150  filesystem_templates not found in config {'static_images_dir': 'static/images', 'cluster_templates': [{'filesystem_templates': [{'data_source': 'archive', 'archive_md5': '7c252fd983b52fcc358c62895b22eed4', 'name': 'galaxy', 'roles': 'galaxyTools,galaxyData', 'archive_url': 'https://swift.rc.nectar.org.au:8888/v1/AUTH_377/cloudman-gvl-430/filesystems/gvl-galaxyfs-4.3.0.tar.gz', 'type': 'transient'}, {'type': 'cvmfs', 'mount_pont': '/cvmfs/data.galaxyproject.org', 'roles': 'galaxyIndices', 'name': 'galaxyIndices'}], 'name': 'Galaxy'}, {'filesystem_templates': [{'type': 'volume', 'name': 'galaxy'}], 'name': 'Data'}], 'is_secure': True, 'password': 'longreads', 'log_level': 'DEBUG', 'initial_cluster_type': 'Galaxy', 'cloud_type': 'openstack', 'static_scripts_dir': 'static/scripts', 'cluster_name': 'long_reads-0', 'freenxpass': 'longreads', 'role': 'master', 'bucket_cluster': 'cm-72b8697de6a86f3c461558e915fb61e0', 'boot_script_path': '/opt/cloudman/boot', 'bucket_default': 'cloudman-gvl-430', 'ec2_conn_path': '/services/Cloud', 'gvl_config': {'install': ['gvl_cmdline_utilities']}, 's3_host': 'swift.rc.nectar.org.au', 'region_name': 'melbourne', 'cidr_range': '115.146.92.0/22', 'region_endpoint': 'nova.rc.nectar.org.au', 'ec2_port': 8773, 'static_favicon_dir': 'static/favicon.ico', 'use_translogger': 'False', 's3_port': 8888, 'boot_script_name': 'cm_boot.py', 'static_dir': 'static', 'use_lint': 'false', 'cloudman_file_name': 'cm.tar.gz', 'access_key': '181a6e4085734fa88bfeec909b856977', 'global_conf': {'__file__': '/mnt/cm/cm_wsgi.ini', 'here': '/mnt/cm'}, 'template_path': 'templates', 'cloud_name': 'NeCTAR', 'static_style_dir': 'static/style', 'cloudman_home': '/mnt/cm', 'post_start_script_url': 'file:///opt/gvl/scripts/triggers;file:///mnt/galaxy/gvl/poststart.d', 'static_cache_time': '360', 'debug': 'true', 'secret_key': '182bd9855b81488090ab8625dd2e9efc', 's3_conn_path': '/', 'static_enabled': 'True'}; loading legacy snapshot data.
+2018-03-09 00:08:44,371 DEBUG           misc:205  Checking if bucket 'cloudman-gvl-430' exists... it does not.
+2018-03-09 00:08:44,371 DEBUG           misc:613  Bucket 'cloudman-gvl-430' does not exist, did not get remote file 'snaps.yaml'
+2018-03-09 00:08:44,372 DEBUG           misc:808  Fetching file https://swift.rc.nectar.org.au:8888/V1/AUTH_377/cloudman-gvl-430/snaps.yaml and saving it as cm_snaps.yaml
+2018-03-09 00:08:44,376 DEBUG   connectionpool:824  Starting new HTTPS connection (1): swift.rc.nectar.org.au
+2018-03-09 00:08:44,399 DEBUG   connectionpool:396  https://swift.rc.nectar.org.au:8888 "GET /V1/AUTH_377/cloudman-gvl-430/snaps.yaml HTTP/1.1" 400 137
+2018-03-09 00:08:44,401 DEBUG           misc:817  Could not fetch file from s3 public url: https://swift.rc.nectar.org.au:8888/V1/AUTH_377/cloudman-gvl-430/snaps.yaml
+2018-03-09 00:08:44,401 DEBUG         master:286  Couldn't get legacy snaps.yaml from default bucket. Assuming it's present in user data, since user data will override it anyway.
+2018-03-09 00:08:44,402 DEBUG            ec2:62   Gathering instance type via http://169.254.169.254/latest/meta-data/instance-type; attempt 2/5
+2018-03-09 00:08:44,901 DEBUG      openstack:128  Gathering instance public IP, attempt 0
+2018-03-09 00:08:50,581 DEBUG            ec2:205  Gathering instance public keys (i.e., key pairs), attempt 1
+2018-03-09 00:08:50,691 DEBUG            ec2:212  Got key pair: 'cloudman_key_pair'
+2018-03-09 00:09:00,667 DEBUG         master:2239 Checking for new version of CloudMan
+2018-03-09 00:09:00,668 DEBUG           misc:736  Getting metadata 'revision' for file 'cm.tar.gz' from bucket 'cm-72b8697de6a86f3c461558e915fb61e0'
+2018-03-09 00:09:01,869 DEBUG           misc:205  Checking if bucket 'cm-72b8697de6a86f3c461558e915fb61e0' exists... it does not.
+2018-03-09 00:09:01,870 DEBUG           misc:242  Attempted to get bucket cm-72b8697de6a86f3c461558e915fb61e0 but it doesn't exist.
+2018-03-09 00:09:01,870 DEBUG           misc:736  Getting metadata 'revision' for file 'cm.tar.gz' from bucket 'cloudman-gvl-430'
+2018-03-09 00:09:02,199 DEBUG           misc:205  Checking if bucket 'cloudman-gvl-430' exists... it does not.
+2018-03-09 00:09:02,199 DEBUG           misc:242  Attempted to get bucket cloudman-gvl-430 but it doesn't exist.
+2018-03-09 00:09:02,199 DEBUG         master:2246 Revision number for user's CloudMan: 'None'; revision number for default CloudMan: 'None'
+----------------------------------------
+Exception happened during processing of request from ('127.0.0.1', 33738)
+Traceback (most recent call last):
+  File "/opt/cloudman/boot/.venv/local/lib/python2.7/site-packages/paste/httpserver.py", line 1085, in process_request_in_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python2.7/SocketServer.py", line 331, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/usr/lib/python2.7/SocketServer.py", line 654, in __init__
+    self.finish()
+  File "/usr/lib/python2.7/SocketServer.py", line 713, in finish
+    self.wfile.close()
+  File "/usr/lib/python2.7/socket.py", line 283, in close
+    self.flush()
+  File "/usr/lib/python2.7/socket.py", line 307, in flush
+    self._sock.sendall(view[write_offset:write_offset+buffer_size])
+error: [Errno 32] Broken pipe
+----------------------------------------

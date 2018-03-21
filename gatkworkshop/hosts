@@ -1,0 +1,8 @@
+[my_hosts]
+43.240.98.137
+43.240.98.135
+43.240.98.136
+
+[my_hosts:vars]
+ansible_ssh_user=ubuntu
+ansible_ssh_private_key_file=/Users/Simon/.ssh/cloudman_key_pair_RC.pem

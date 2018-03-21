@@ -1,0 +1,88 @@
+- hosts: my_hosts
+  vars:
+    gvl_app_path: /mnt/gvl/apps
+    gvl_tmp_path: /mnt/gvl/tmp
+  environment:
+    TEMPDIR: "{{ gvl_tmp_path }}"
+    TEMP: "{{ gvl_tmp_path}}"
+  tasks:
+
+  - name: Check gvl_apps directory exists
+    file: name="{{ gvl_app_path }}" state=directory owner=ubuntu group=ubuntu
+    sudo: yes
+    sudo_user: root
+
+  - name: Create the homebrew_cache directory
+    file: dest="{{ gvl_tmp_path }}/homebrew_temp" state=directory owner=ubuntu group=ubuntu
+    sudo: yes
+    sudo_user: root
+
+  - name: Create the homebrew_temp directory
+    file: dest="{{ gvl_tmp_path }}/homebrew_cache" state=directory owner=ubuntu group=ubuntu
+    sudo: yes
+    sudo_user: root
+
+  - name: Make data folder on researcher
+    file: dest="/mnt/galaxy/home/researcher/workshop_data" owner=researcher group=users state=directory
+    sudo: yes
+    sudo_user: root
+
+  - name: Get data files
+    get_url: url="https://swift.rc.nectar.org.au:8888/v1/AUTH_377/public/{{ item }}" dest="/mnt/transient_nfs/{{ item }}"
+    with_items:
+      - 3219673.zip
+      - 3219685.zip
+    sudo: yes
+    sudo_user: root
+
+  - name: Unzip datafiles
+    unarchive: src="/mnt/transient_nfs/{{ item }}" dest="/mnt/galaxy/home/researcher/workshop_data/" copy=no
+    with_items:
+      - 3219673.zip
+      - 3219685.zip
+    sudo: yes
+    sudo_user: researcher
+
+  - name: Install some more required system packages
+    apt: pkg="{{ item }}" state=latest
+    with_items:
+      - build-essential
+      - curl
+      - git
+      - oracle-java8-installer
+    sudo: yes
+    sudo_user: root
+
+  - name: Add some R packages.
+    command: >
+      Rscript --slave --no-save --no-restore-history -e "if (! ('{{ item }}' %in% installed.packages()[,'Package'])) { install.packages(pkgs='{{ item }}', repos=c('http://cran.ms.unimelb.edu.au/')); print('Added'); } else { print('Already installed'); }"
+    register: r_result
+    failed_when: "r_result.rc != 0 or 'had non-zero exit status' in r_result.stderr"
+    changed_when: "'Added' in r_result.stdout"
+    with_items:
+      - ggplot2
+      - reshape
+      - gplots
+      - gsalib
+    sudo: yes
+    sudo_user: root
+
+  - name: Add some R packages.
+    command: >
+      Rscript --slave --no-save --no-restore-history -e "source('http://bioconductor.org/biocLite.R'); if (! ('{{ item }}' %in% installed.packages()[,'Package'])) { biocLite('{{ item }}'); print('Added'); } else { print('Already installed'); }"
+    register: r_result
+    failed_when: "r_result.rc != 0 or 'had non-zero exit status' in r_result.stderr"
+    changed_when: "'Added' in r_result.stdout"
+    with_items:
+      - limma
+      - edgeR
+      - gplots
+      - org.Mm.eg.db
+      - EDASeq
+      - RColorBrewer
+      - GO.db
+      - BiasedUrn
+      - DESeq2
+      - Rsubread
+    sudo: yes
+    sudo_user: root

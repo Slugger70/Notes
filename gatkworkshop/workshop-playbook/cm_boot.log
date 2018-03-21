@@ -1,0 +1,34 @@
+2018-03-09 00:05:10,683 INFO   cm_boot:241 - << Starting nginx >>
+2018-03-09 00:05:10,684 DEBUG  cm_boot:163 - Reconfiguring nginx conf
+2018-03-09 00:05:10,684 DEBUG  cm_boot:260 - Creating tmp dir for nginx /mnt/galaxy/upload_store
+2018-03-09 00:05:10,699 DEBUG  cm_boot:59  - /usr/local/sbin/nginx is file: False; it's executable: False
+2018-03-09 00:05:10,699 DEBUG  cm_boot:59  - /usr/local/bin/nginx is file: False; it's executable: False
+2018-03-09 00:05:10,700 DEBUG  cm_boot:59  - /usr/sbin/nginx is file: True; it's executable: True
+2018-03-09 00:05:10,700 DEBUG  cm_boot:269 - Using '/usr/sbin/nginx' as the nginx executable
+2018-03-09 00:05:10,718 ERROR  cm_boot:32  - Error running 'ps xa | grep nginx | grep -v grep'. Process returned code '1' and following stderr: ''
+2018-03-09 00:05:10,719 DEBUG  cm_boot:272 - nginx not running; will try and start it now
+2018-03-09 00:05:10,948 DEBUG  cm_boot:26  - Successfully ran 'systemctl start nginx'
+2018-03-09 00:05:10,948 DEBUG  cm_boot:286 - Deleting tmp dir for nginx /mnt/galaxy/upload_store
+2018-03-09 00:05:10,954 DEBUG  cm_boot:26  - Successfully ran 'rm -rf /mnt/galaxy/upload_store'
+2018-03-09 00:05:10,954 DEBUG  cm_boot:346 - Deleting /mnt/cm dir before download
+2018-03-09 00:05:10,958 DEBUG  cm_boot:26  - Successfully ran 'rm -rf /mnt/cm'
+2018-03-09 00:05:10,958 INFO   cm_boot:348 - << Downloading CloudMan >>
+2018-03-09 00:05:10,958 DEBUG  cm_boot:44  - Checking existence of directory '/mnt/cm'
+2018-03-09 00:05:10,958 DEBUG  cm_boot:47  - Creating directory '/mnt/cm'
+2018-03-09 00:05:10,974 DEBUG  cm_boot:49  - Directory '/mnt/cm' successfully created.
+2018-03-09 00:05:10,974 DEBUG  cm_boot:353 - Using user-provided default bucket: cloudman-gvl-430
+2018-03-09 00:05:10,974 INFO   cm_boot:331 - Connecting to a custom Object Store
+2018-03-09 00:05:10,975 DEBUG  cm_boot:340 - Got boto S3 connection: S3Connection:swift.rc.nectar.org.au
+2018-03-09 00:05:10,976 DEBUG  cm_boot:204 - Checking if key 'cm.tar.gz' exists in bucket 'cm-72b8697de6a86f3c461558e915fb61e0'
+2018-03-09 00:05:11,264 DEBUG  cm_boot:184 - Getting file cm.tar.gz from bucket cloudman-gvl-430
+2018-03-09 00:05:11,265 DEBUG  cm_boot:188 - Attempting to retrieve file 'cm.tar.gz' from bucket 'cloudman-gvl-430'
+2018-03-09 00:05:11,941 ERROR  cm_boot:194 - File 'cm.tar.gz' in bucket 'cloudman-gvl-430' not found.
+2018-03-09 00:05:11,941 INFO   cm_boot:383 - Attempting to retrieve from from https://swift.rc.nectar.org.au:8888/v1/AUTH_377/cloudman-gvl-430/cm.tar.gz
+2018-03-09 00:05:12,197 DEBUG  cm_boot:26  - Successfully ran 'wget --output-document='/mnt/cm/cm.tar.gz' 'https://swift.rc.nectar.org.au:8888/v1/AUTH_377/cloudman-gvl-430/cm.tar.gz''
+2018-03-09 00:05:12,198 INFO   cm_boot:416 - << Unpacking CloudMan from /mnt/cm/cm.tar.gz >>
+2018-03-09 00:05:12,453 DEBUG  cm_boot:437 - virtualenv seems to be installed
+2018-03-09 00:05:12,453 DEBUG  cm_boot:459 - Copying user data file from '/opt/cloudman/boot/userData.yaml' to '/mnt/cm/userData.yaml'
+2018-03-09 00:05:12,454 INFO   cm_boot:462 - << Starting CloudMan in /mnt/cm >>
+2018-03-09 00:05:12,454 DEBUG  cm_boot:437 - virtualenv seems to be installed
+2018-03-09 00:05:22,279 DEBUG  cm_boot:26  - Successfully ran '. /opt/cloudman/boot/.venv/bin/activate && cd /mnt/cm; pip install -r /mnt/cm/requirements.txt; sh run.sh --daemon --log-file=/var/log/cloudman/cloudman.log'
+2018-03-09 00:05:22,279 INFO   cm_boot:522 - ---> /opt/cloudman/boot/cm_boot.py done <---

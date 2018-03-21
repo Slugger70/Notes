@@ -1,0 +1,57 @@
+- name: Pre-configure
+
+  hosts: workshop-instances
+
+  vars:
+      gvl_tmp_path: "/mnt/gvl/tmp"
+      gvl_app_path: "/mnt/gvl/apps"
+      working_env:
+          TEMPDIR: "{{ gvl_tmp_path }}"
+          TEMP: "{{ gvl_tmp_path }}"
+
+  tasks:
+      - name: create directories
+        file:
+            path: "{{ item }}"
+            state: directory
+            owner: ubuntu
+            group: users
+            mode: 0755
+            recurse: yes
+        with_items:
+            - "{{ gvl_app_path }}"
+            - "{{ gvl_tmp_path }}"
+        become: yes
+        become_user: root
+
+      - name: get tarball
+        get_url:
+            url: "https://swift.rc.nectar.org.au:8888/v1/AUTH_377/public/conda_long_reads.tgz"
+            dest: "{{ gvl_tmp_path }}/conda_long_reads.tgz"
+        become: yes
+        become_user: ubuntu
+        environment: "{{ working_env }}"
+
+      - name: untar the conda system
+        unarchive:
+            src: "{{ gvl_tmp_path }}/conda_long_reads.tgz"
+            dest: "{{ gvl_app_path }}"
+            remote_src: yes
+        become: yes
+        become_user: ubuntu
+
+      - name: fix the broken indices thing
+        file:
+            path: "/mnt/galaxyIndices/cvmfs"
+            state: directory
+            owner: root
+            group: root
+            mode: 0755
+            recurse: yes
+        become: yes
+        become_user: root
+
+      - name: Reboot the machine
+        shell: shutdown -r now
+        become: yes
+        become_user: root

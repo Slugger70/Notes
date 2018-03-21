@@ -1,0 +1,25 @@
+[workshop-instances]
+130.56.249.22
+130.56.249.26
+130.56.248.233
+130.56.248.247
+130.56.248.214
+130.56.248.235
+130.56.248.252
+130.56.248.242
+130.56.248.6
+115.146.93.129
+115.146.93.130
+115.146.92.162
+115.146.93.127
+115.146.93.132
+115.146.93.118
+115.146.92.180
+115.146.93.109
+115.146.93.115
+
+[workshop-instances:vars]
+ansible_host_key_checking=False
+ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
+ansible_user=ubuntu
+ansible_ssh_private_key_file="/Users/simongladman/.ssh/cloudman_key_pair_RC.pem"

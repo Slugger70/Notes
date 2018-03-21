@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Artemis
+Comment=Start Artemis
+Exec="/mnt/gvl/apps/artemis/art"
+Icon=utilities-terminal-symbolic
+Terminal=false
+Type=Application

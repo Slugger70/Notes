@@ -1,0 +1,62 @@
+- hosts: my_hosts
+  vars:
+    gvl_app_path: /mnt/gvl/apps
+    gvl_tmp_path: /mnt/gvl/tmp
+  environment:
+    HOMEBREW_BUILD_FROM_SOURCE: 1
+    PATH: "{{ gvl_app_path }}/linuxbrew/bin:{{ gvl_app_path }}/linuxbrew/sbin:{{ ansible_env.PATH }}"
+    MANPATH: "{{ gvl_app_path }}/linuxbrew/share/man:{{ ansible_env.MANPATH }}"
+    INFOPATH: "{{ gvl_app_path }}/linuxbrew/share/info:{{ ansible_env.INFOPATH }}"
+    HOMEBREW_TEMP: "{{ gvl_tmp_path }}/homebrew_temp"
+    HOMEBREW_CACHE: "{{ gvl_tmp_path }}/homebrew_cache"
+    TEMPDIR: "{{ gvl_tmp_path }}"
+    TEMP: "{{ gvl_tmp_path}}"
+  tasks:
+  # - name: Add second user
+  #   shell: chdir="/opt/gvl/gvl_commandline_utilities" sh setup_user.sh -s researcher2
+  #   sudo: yes
+  #   sudo_user: ubuntu
+  #
+  # - name: Make data folder on researcher
+  #   file: dest="/mnt/galaxy/home/researcher/Desktop/workshop_data" owner=researcher group=users state=directory
+  #   sudo: yes
+  #   sudo_user: root
+  #
+  # - name: Make data folder on researcher2
+  #   file: dest="/mnt/galaxy/home/researcher2/Desktop/workshop_data" owner=researcher group=users state=directory
+  #   sudo: yes
+  #   sudo_user: root
+  #
+  # - name: Copy files to deskop
+  #   copy: src=files/Desktop/ dest=/mnt/galaxy/home/{{ item }}/Desktop/ owner={{ item }} mode="ug+rwx"
+  #   with_items:
+  #     - researcher
+  #     - researcher2
+  #   sudo: yes
+  #   sudo_user: root
+  #
+  # - name: Copy data files
+  #   copy: src=files/data/ dest=/mnt/galaxy/home/{{ item }}/Desktop/workshop_data/ owner={{ item }} mode="ug+rwx"
+  #   with_items:
+  #     - researcher
+  #     - researcher2
+  #   sudo: yes
+  #   sudo_user: root
+  #
+  # - name: Brew install figtree and beast
+  #   homebrew: name={{ item }} state=present
+  #   with_items:
+  #     - beast
+  #     - figtree
+  #   sudo: yes
+  #   sudo_user: ubuntu
+
+  - name: Move figtree jar file
+    command: "mv /mnt/gvl/apps/linuxbrew/Cellar/figtree/1.4.2/lib/lib/figtree.jar /mnt/gvl/apps/linuxbrew/Cellar/figtree/1.4.2/lib/figtree.jar"
+    sudo: yes
+    sudo_user: ubuntu
+
+  #- name: Copy new verison of tbl2asn
+  #  copy: src=files/tbl2asn dest=/mnt/galaxy/tools/tbl2asn/23.7/takadonet/package_tbl2asn_23_7/2271d52a8531/bin/tbl2asn mode="ug+rwx" force=yes
+  #  sudo: yes
+  #  sudo_user: root

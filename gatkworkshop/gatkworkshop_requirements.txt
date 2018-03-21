@@ -1,0 +1,36 @@
+Picard 1.136 located at: /mnt/galaxy/tools/picard/1.136/devteam/package_picard_1_136/3e9c24e5325b/picard.jar
+
+Gatk-3.5 URL: https://swift.rc.nectar.org.au:8888/v1/AUTH_377/public/GenomeAnalysisTK-3.5.tar.bz2
+
+Other things to make available on command line via a .profile:
+  1. samtools 1.2
+  2. R libraries for R-Studio: ggplot2, reshape, gplots, gsalib
+
+-----------------------------------------------
+  How to install R packages with Ansible
+with 5 comments. Here is a short snipet of Ansible playbook that installs R and any required packages to any nodes of the cluster:
+
+- name: Making sure R is installed (debian/ubuntu apt)
+apt: pkg=r-base state=installed
+
+- name: adding a few R packages
+command: /usr/bin/Rscript --slave --no-save --no-restore-history -e "if (! ('{{item}}' %in% installed.packages()[,'Package'])) install.packages(pkgs={{item}}, repos=c('http://www.freestatistics.org/cran/'))"
+with_items:
+- rjson
+- rPython
+- plyr
+- psych
+- reshape2
+
+OR
+------------------------------------------------
+You should replace the repos with one chosen from the list of Cran mirrors.
+
+- name: r - packages
+  command: >
+    Rscript --slave --no-save --no-restore-history -e "if (! ('{{ item }}' %in% installed.packages()[,'Package'])) { install.packages(pkgs='{{ item }}', repos=c('http://ftp.heanet.ie/mirrors/cran.r-project.org/')); print('Added'); } else { print('Already installed'); }"
+  register: r_result
+  failed_when: "r_result.rc != 0 or 'had non-zero exit status' in r_result.stderr"
+  changed_when: "'Added' in r_result.stdout"
+  with_items:
+    - getopt

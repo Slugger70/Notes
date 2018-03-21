@@ -1,0 +1,72 @@
+- hosts: my_hosts
+  vars:
+    gvl_app_path: /mnt/gvl/apps
+    gvl_tmp_path: /mnt/gvl/tmp
+  environment:
+    TEMPDIR: "{{ gvl_tmp_path }}"
+    TEMP: "{{ gvl_tmp_path}}"
+  tasks:
+
+  - name: Check gvl_apps directory exists
+    file: name="{{ gvl_app_path }}" state=directory owner=ubuntu group=ubuntu
+    sudo: yes
+    sudo_user: root
+
+  - name: Create the homebrew_cache directory
+    file: dest="{{ gvl_tmp_path }}/homebrew_temp" state=directory owner=ubuntu group=ubuntu
+    sudo: yes
+    sudo_user: root
+
+  - name: Create the homebrew_temp directory
+    file: dest="{{ gvl_tmp_path }}/homebrew_cache" state=directory owner=ubuntu group=ubuntu
+    sudo: yes
+    sudo_user: root
+
+  - name: Make data folder on researcher
+    file: dest="/mnt/galaxy/home/researcher/Desktop/workshop_data" owner=researcher group=users state=directory
+    sudo: yes
+    sudo_user: root
+
+  - name: Copy files to deskop
+    copy: src=files/Desktop/ dest=/mnt/galaxy/home/{{ item }}/Desktop/ owner={{ item }} mode="ug+rwx"
+    with_items:
+      - researcher
+    sudo: yes
+    sudo_user: root
+
+  - name: Copy data files
+    copy: src=files/data/ dest=/mnt/galaxy/home/{{ item }}/Desktop/workshop_data/ owner={{ item }} mode="ug+rwx"
+    with_items:
+      - researcher
+    sudo: yes
+    sudo_user: root
+  - name: Check gvl_apps directory exists
+    file: name="{{ gvl_app_path }}" state=directory owner=ubuntu group=ubuntu
+    sudo: yes
+    sudo_user: root
+
+  - name: Install some more required system packages
+    apt: pkg="{{ item }}" state=latest
+    with_items:
+      - build-essential
+      - curl
+      - git
+      - oracle-java8-installer
+    sudo: yes
+    sudo_user: root
+
+  #Artemis
+  - name: Download Artemis genome browser
+    get_url: url=ftp://ftp.sanger.ac.uk/pub/resources/software/artemis/artemis.tar.gz dest="{{ gvl_tmp_path }}/artemis.tar.gz"
+    sudo: yes
+    sudo_user: root
+
+  - name: Make Artemis directory
+    file: dest="{{ gvl_app_path }}/artemis" owner=ubuntu group=ubuntu state=directory
+    sudo: yes
+    sudo_user: root
+
+  - name: copy artemis to dir
+    unarchive: src="{{ gvl_tmp_path }}/artemis.tar.gz" dest="{{ gvl_app_path }}" copy=no
+    sudo: yes
+    sudo_user: root

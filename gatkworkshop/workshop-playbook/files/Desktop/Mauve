@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Mauve
+Comment=Start Mauve
+Exec="/mnt/gvl/apps/mauve/mauve_snapshot_2015-02-13/Mauve"
+Icon=utilities-terminal-symbolic
+Terminal=false
+Type=Application

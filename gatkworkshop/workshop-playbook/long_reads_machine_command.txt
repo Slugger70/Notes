@@ -1,0 +1,1 @@
+python launch_gvl.py -a 181a6e4085734fa88bfeec909b856977 -s 182bd9855b81488090ab8625dd2e9efc -i ami-f3d9c818 -z melbourne-np -t m1.large -p longreads -u user_data.txt -c long_reads -n 9 -j 3
