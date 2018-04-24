@@ -20,7 +20,7 @@ This describes what I did to set up the Grafana server for Galaxy-mel. We need a
 
 #### Clone the playbooks
 
-Clone the playbook we use. The branch stats_genome_edu_au_setup has the changes we made for the setup we used.
+Clone the playbook we use. The branch master has the changes we made for the setup we used.
 
 The playbook `grafana.yml` contains a bunch of roles. We don't use a couple and the os/ssl hardening ones are optional also.
 
@@ -32,9 +32,24 @@ git checkout stats_genome_edu_au_setup
 
 #### Modify the playbook if required
 
-Set the ip/hostname in `hosts` under `[grafana]`
+* Set the ip/hostname in `hosts` under `[grafana]`
 
-Use the right key file.
+* Use the right key file.
+
+#### Add a bot user to the galaxy server for testing purposes
+
+* Create a bot user on Galaxy and get an api key.. bot@usegalaxy.org.au, 37dqztczh, 674ecd9a58dc67ecf35113a1526cc9ce
+
+* Create `grafana.yml` in the `/secret_group_vars` directory of the infrastructure playbook
+
+```yaml
+galaxy_test_user__api_key: <apikey>
+galaxy_test_user__password: <user_password>
+```
+
+Obviously, replace `<apikey>` with the actual api key etc.. :)
+
+* Encrypt the `grafana.yml` file with `ansible-vault encrypt secret_group_vars/grafana.yml`. Use the password stored in .vault_password
 
 #### Run the playbook
 
@@ -124,6 +139,34 @@ And data should be being collected and displayed.
 - Make sure Telegraf is running on the stats machine.
 - Make sure the port `8086` is open on the stats machine.
 - Make sure that Grafana and NGINX are configured properly.
+
+### Set the retention policy for the Influx database.
+
+We need to make sure that the disk doesn't fill up with all of our data. 2 weeks would probably be enough data.
+
+ssh into the stats machine and do the following
+
+```
+$ influx
+
+> show databases
+name: databases
+name
+----
+telegraf
+_internal
+
+> CREATE RETENTION POLICY "two_weeks" ON "telegraf" DURATION 2w REPLICATION 1 DEFAULT
+> show retention policies
+name      duration shardGroupDuration replicaN default
+----      -------- ------------------ -------- -------
+autogen   0s       168h0m0s           1        false
+two_weeks 336h0m0s 24h0m0s            1        true
+> exit
+
+```
+
+The `2w` after the `DURATION` sets the retention time. Can use `d`, `w`, `m`, `y` for days, weeks, months, years etc. here.
 
 ## Step 3: Install Telegraf on machines you want to monitor.
 
@@ -219,6 +262,27 @@ Phew! Nearly done. Now we can create a new Dashboard in Grafana
 * Import a new dashboard using the file [Galaxy-1521564452764.json](Galaxy-1521564452764.json)
 * Should be all working at this point!
 
-## Play around!
+## Step 4: Play around!
 
 Can play around with monitoring, more dashboards, additional monitoring etc!
+
+# Monitoring Galaxy Functionality with Nagios
+
+This describes how to set up simple nagios to monitor our galaxy by getting it to run a small tool on different handlers and queues etc.
+
+## Step 1: Install the nagios stuff to the stats machines
+
+* Create a bot user on Galaxy and get an api key.. bot@usegalaxy.org.au, 37dqztczh, 674ecd9a58dc67ecf35113a1526cc9ce
+
+* Create `grafana.yml` in the `/secret_group_vars` directory of the infrastructure playbook
+
+```yaml
+galaxy_test_user__api_key: <apikey>
+galaxy_test_user__password: <user_password>
+```
+
+Obviously, replace `<apikey>` with the actual api key etc.. :)
+
+* Edit the `grafana.yml` file in `/group_vars` and fix all the paths, handlers lists etc. etc.
+
+* In the `grafana.yml` role in `/` comment out everything that's already been run..
