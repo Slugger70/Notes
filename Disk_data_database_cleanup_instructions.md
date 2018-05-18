@@ -92,6 +92,8 @@ $> psql -p 5930 #The port number of the PostgreSQL server.
 
 You are now in the command line interface for the PostgreSQL server.
 
+#### 2. Get the list of jobs with state = `'new'`
+
 We want to get the list of the jobs we are going to change the status of. To get the details of all of these jobs use the following command.
 
 ```
@@ -100,6 +102,8 @@ galaxy=> select j from job j where j.state = 'new';
 
 This will return a list of all the jobs that are in state 'new'. It will give all the details of these jobs. Have a look and find the ones you are interested in. Now to make sure we do not delete any brand new jobs while we are playing with things, copy the timestamp from the most recent job you want to get rid of. We will use it in the next set of commands to check and make sure we're only altering the records of interest.
 
+#### 3. Get a list of jobs whose state we want to change
+
 Now write a new query to select just the job id's of all the jobs we want to update. Substitute the timestamp shown here for the one you copied earlier.
 
 ```
@@ -107,6 +111,8 @@ galaxy=> select j.id as id from job j where j.state = 'new' and j.create_time <=
 ```
 
 Compare and check the returned list carefully with the list of jobs shown on the **Manage Jobs** Admin UI page in Galaxy. If they are the same then proceed. If not, modify the above query to get the list you want.
+
+#### 4. Set the state of those jobs to `'error'`
 
 Using the id list generation query as a sub-query, write an UPDATE query to fix all the "broken" records in the database.
 
