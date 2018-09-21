@@ -1,0 +1,243 @@
+- name: Pre-configure
+
+  hosts: workshop-instances
+
+  vars:
+      gvl_tmp_path: "/mnt/gvl/tmp"
+      gvl_app_path: "/mnt/gvl/apps"
+      cpus_avail: 4
+      working_env:
+          TEMPDIR: "{{ gvl_tmp_path }}"
+          TEMP: "{{ gvl_tmp_path }}"
+
+  tasks:
+      - name: create directories
+        file:
+            path: "{{ item }}"
+            state: directory
+            owner: ubuntu
+            group: users
+            mode: 0755
+            recurse: yes
+        with_items:
+            - "{{ gvl_app_path }}"
+            - "{{ gvl_tmp_path }}"
+        become: yes
+        become_user: root
+
+      - name: Move the ansible tmp dir to somewhere sensible
+        shell: "rm -rf /home/ubuntu/.ansible/tmp && ln -s /mnt/gvl/tmp /home/ubuntu/.ansible/tmp"
+        become: yes
+        become_user: root
+
+      - name: get tarball
+        get_url:
+            url: "https://swift.rc.nectar.org.au:8888/v1/AUTH_377/public/conda_long_reads.tgz"
+            dest: "{{ gvl_tmp_path }}/conda_long_reads.tgz"
+        become: yes
+        become_user: ubuntu
+        environment: "{{ working_env }}"
+
+      - name: untar the conda system
+        unarchive:
+            src: "{{ gvl_tmp_path }}/conda_long_reads.tgz"
+            dest: "{{ gvl_app_path }}"
+            remote_src: yes
+        become: yes
+        become_user: ubuntu
+
+      - name: Add second user
+        shell: chdir="/opt/gvl/gvl_commandline_utilities" sh setup_user.sh -s researcher2
+        become: yes
+        become_user: ubuntu
+
+      - name: Move the docker stuff - Stop Docker
+        systemd:
+            name: docker
+            state: stopped
+        become: yes
+        become_user: root
+
+      - name: Move the docker stuff - move the files
+        shell: mv /var/lib/docker /mnt/gvl/
+        become: yes
+        become_user: root
+
+      - name: Move the docker stuff - mod the docker start file
+        lineinfile:
+            path: /etc/docker/daemon.json
+            regexp: '"graph":'
+            line: '    "graph": "/mnt/gvl/docker/",'
+        become: yes
+        become_user: root
+
+      - name: Move the docker stuff - start docker
+        systemd:
+            name: docker
+            state: started
+        become: yes
+        become_user: root
+
+      - name: Get the docker container for Albacore
+        shell: docker pull vera/albacore
+        become: yes
+        become_user: root
+
+      - name: add users to docker group
+        user:
+            name: '{{ item }}'
+            groups: docker
+            append: yes
+        with_items:
+          - ubuntu
+          - researcher
+          - researcher2
+        become: yes
+        become_user: root
+
+      - name: Change the vnc resolution to 1280x1024
+        lineinfile:
+            path: /etc/xinetd.d/vnc
+            regexp: 'server_args'
+            line: '   server_args = -inetd -once -query localhost -geometry 1280x1024 -depth 16 passwordFile=/home/ubuntu/.vnc/passwd'
+        become: yes
+        become_user: root
+
+      - name: Get Bandage
+        get_url:
+            url: "https://github.com/rrwick/Bandage/releases/download/v0.8.1/Bandage_Ubuntu_static_v0_8_1.zip"
+            dest: "{{ gvl_tmp_path }}/Bandage_Ubuntu_static_v0_8_1.zip"
+        become: yes
+        become_user: ubuntu
+        environment: "{{ working_env }}"
+
+      - name: Untar Bandage into /usr/local/bin
+        unarchive:
+            src: "{{ gvl_tmp_path }}/Bandage_Ubuntu_static_v0_8_1.zip"
+            dest: "/usr/local/bin/"
+            mode: 0755
+            remote_src: yes
+        become: yes
+        become_user: root
+
+      - name: Modify cloudman's default slurm.conf to allow all cpus
+        file:
+            path: /opt/cloudman/config/conftemplates
+            state: directory
+        become: yes
+        become_user: root
+
+      - name: Copy slurm template file to folder
+        copy:
+            remote_src: True
+            src: /mnt/cm/cm/conftemplates/slurm.conf
+            dest: /opt/cloudman/config/conftemplates/slurm.conf
+        become: yes
+        become_user: root
+
+      - name: Change the slurm config to use all available cpus.
+        replace:
+            path: /opt/cloudman/config/conftemplates/slurm.conf
+            regexp: '(NodeAddr=127.0.0.1 CPUS=)$num_cpus'
+            replace: '\1{{ cpus_avail }}'
+            backup: yes
+        become: yes
+        become_user: root
+
+      - name: Make directory for workshop data
+        file:
+            path: "/home/{{ item }}/workshop_data"
+            state: directory
+            owner: "{{ item }}"
+            group: "{{ item }}"
+        with_items:
+          - researcher
+          - researcher2
+        become: yes
+        become_user: root
+
+      - name: Make directory for workshop subset data
+        file:
+            path: "/home/{{ item }}/workshop_data/subset_data"
+            state: directory
+            owner: "{{ item }}"
+            group: "{{ item }}"
+        with_items:
+          - researcher
+          - researcher2
+        become: yes
+        become_user: root
+
+      - name: get data for workshop
+        copy:
+            src: "{{ item.file }}"
+            dest: "/home/{{ item.user }}/workshop_data/{{ item.file }}"
+            mode: 0755
+            owner: "{{ item.user }}"
+            group: "{{ item.user }}"
+        with_items:
+          - { user: "researcher", file: "pacbio.fq" }
+          - { user: "researcher", file: "R1.fq" }
+          - { user: "researcher", file: "R2.fq" }
+          - { user: "researcher2", file: "pacbio.fq" }
+          - { user: "researcher2", file: "R1.fq" }
+          - { user: "researcher2", file: "R2.fq" }
+        become: yes
+        become_user: root
+
+      - name: get subset data for workshop
+        copy:
+            src: "{{ item.file }}"
+            dest: "/home/{{ item.user }}/workshop_data/subset_data/{{ item.dest_file }}"
+            mode: 0755
+            owner: "{{ item.user }}"
+            group: "{{ item.user }}"
+        with_items:
+          - { user: "researcher", file: "pacbio_subset.fq", dest_file: "pacbio.fq" }
+          - { user: "researcher", file: "R1_subset.fq", dest_file: "R1.fq" }
+          - { user: "researcher", file: "R2_subset.fq", dest_file: "R2.fq" }
+          - { user: "researcher2", file: "pacbio_subset.fq", dest_file: "pacbio.fq" }
+          - { user: "researcher2", file: "R1_subset.fq", dest_file: "R1.fq" }
+          - { user: "researcher2", file: "R2_subset.fq", dest_file: "R2.fq" }
+        become: yes
+        become_user: root
+
+      #get and install IGV on the vnc desktop for these machines.
+      - name: Download IGV locally
+        get_url:
+            url: "https://swift.rc.nectar.org.au:8888/v1/AUTH_377/public/IGV_2.4.14.zip"
+            dest: /mnt/transient_nfs/IGV_2.4.14.zip
+
+      - name: make an IGV directory
+        file:
+            dest: "{{ gvl_app_path }}/IGV"
+            state: directory
+            owner: ubuntu
+
+      - name: Unarchive IGV to app_dir
+        unarchive: src=/mnt/transient_nfs/IGV_2.4.14.zip dest="{{ gvl_app_path }}/IGV" copy=no
+
+      - name: Alter the Desktop link
+        replace:
+            path: /home/{{ item }}/Desktop/igv.desktop
+            regexp: 'Exec="/mnt/galaxy/tools/igv/IGV_2.3.93/igv.sh"'
+            replace: 'Exec="{{ gvl_app_path }}/IGV/igv.sh"'
+        with_items:
+            - researcher
+            - researcher2
+        become: yes
+        become_user: root
+
+      - name: Add Nandan's perl script to the conda path
+        copy:
+            src: filter_fasta_by_seq_length.pl
+            dest: "{{ gvl_app_path }}/conda/bin/filter_fasta_by_seq_length.pl"
+            mode: 0755
+            owner: ubuntu
+            group: ubuntu
+
+
+      - name: Reboot the machine
+        shell: shutdown -r now
+        become: yes
+        become_user: root
