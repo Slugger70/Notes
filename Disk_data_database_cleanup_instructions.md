@@ -218,16 +218,17 @@ A query against the Galaxy database can give us the list of histories.
     $ psql -c "select h.id, h.update_time, h.user_id, u.email, h.published, h.deleted, h.purged, h.hid_counter from history h, galaxy_user u where h.update_time < (now() - '52 weeks'::interval) and h.user_id = u.id and h.deleted = FALSE and h.published = FALSE order by h.update_time;" > 1_year_old_histories.txt
 
     $ head 1_year_old_histories.txt
-    id   |        update_time         | user_id |                   email                    | published | deleted | purged | hid_counter
--------+----------------------------+---------+--------------------------------------------+-----------+---------+--------+-------------
-    1596 | 2016-01-28 00:35:05.194006 |      12 | xxxxxxxxxxxxxxxxxxxx                       | f         | f       | f      |           1
-    1576 | 2016-01-28 04:17:39.167999 |      11 | xxxxxxxxxxxxxxxxxxxxxxxxxx                 | f         | f       | f      |          22
-    1571 | 2016-01-31 06:44:15.470148 |       5 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx        | f         | f       | f      |         101
-    1549 | 2016-02-01 03:25:50.110857 |       9 | xxxxxxxxxxxxxxxxxxxx                       | f         | f       | f      |          45
-    1572 | 2016-02-01 06:42:53.94472  |       5 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx        | f         | f       | f      |         102
-    1676 | 2016-02-02 04:09:25.617383 |      14 | xxxxxxxxxxxxxxxxxxxxx                      | f         | f       | f      |          10
-    2093 | 2016-02-03 08:46:43.633603 |      18 | xxxxxxxxxxxxxxxxxxxxxxxxxx                 | f         | f       | f      |          25
-    2605 | 2016-02-04 02:49:20.324186 |      17 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx       | f         | f       | f      |           6
+      id   |        update_time         | user_id |                   email                    | published | deleted | purged | hid_counter
+    -------+----------------------------+---------+--------------------------------------------+-----------+---------+--------+-------------
+      1596 | 2016-01-28 00:35:05.194006 |      12 | xxxxxxxxxxxxxxxxxxxx                       | f         | f       | f      |           1
+      1576 | 2016-01-28 04:17:39.167999 |      11 | xxxxxxxxxxxxxxxxxxxxxxxxxx                 | f         | f       | f      |          22
+      1571 | 2016-01-31 06:44:15.470148 |       5 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx        | f         | f       | f      |         101
+      1549 | 2016-02-01 03:25:50.110857 |       9 | xxxxxxxxxxxxxxxxxxxx                       | f         | f       | f      |          45
+      1572 | 2016-02-01 06:42:53.94472  |       5 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx        | f         | f       | f      |         102
+      1676 | 2016-02-02 04:09:25.617383 |      14 | xxxxxxxxxxxxxxxxxxxxx                      | f         | f       | f      |          10
+      2093 | 2016-02-03 08:46:43.633603 |      18 | xxxxxxxxxxxxxxxxxxxxxxxxxx                 | f         | f       | f      |          25
+      2605 | 2016-02-04 02:49:20.324186 |      17 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx       | f         | f       | f      |           6
+
     ```
 
     The fields returned from this query are kinda cool.
