@@ -245,6 +245,49 @@ By changing the `52` in the section of the query ` < (now() - '52 weeks'::interv
 
 ### 3. Deleting the histories
 
-I think we need to update the database saying that these histories can be marked as deleted. I'm not sure yet and this could be fraught with **DANGER**.. :)
+So the next thing to do is mark the histories we have just selected as deleted. This is just an update query of the above query. This will not actually delete the data off the disk but set it up so it will be deleted when we run the regular `pgcleanup` scripts. As we use a cutoff of 10 days for the `pgcleanup` scripts, the histories and underlying data will not be purged from disk for a further 10 days.
 
-TBC....
+* The update script takes the form of:
+
+    ```sql
+    UPDATE history
+    SET deleted = TRUE
+    FROM
+        (
+            SELECT h.id
+            FROM history h
+            WHERE
+                h.update_time < (now() - '13 weeks'::interval)
+                AND h.deleted = FALSE
+                AND h.published = FALSE
+            ORDER BY h.id
+        ) AS subquery
+    WHERE
+        history.id = subquery.id;
+    ```
+
+* Where `13 weeks` can be changed to whatever age we like. 13 weeks is a rounded figure close to our policy of 90 days.
+
+### 4. Purge the histories and associated data from Disk.
+
+Running the last 4 of the regular clean up script operations will purge the histories and remove the associated data from disk.
+
+```sh
+>$ python ./scripts/cleanup_datasets/pgcleanup.py -o 10 -s purge_deleted_histories
+
+>$ python ./scripts/cleanup_datasets/pgcleanup.py -o 10 -s purge_deleted_hdas
+
+>$ python ./scripts/cleanup_datasets/pgcleanup.py -o 10 -s delete_datasets
+
+>$ python ./scripts/cleanup_datasets/pgcleanup.py -o 10 -s purge_datasets
+```
+
+but only 10 days after the query in part 3 has been run.
+
+## TO DO:
+
+* Automate the process in part 3 to:
+    * Run the `select` query with last `update_time` being 11 weeks in the past and email users that their history (with the history name) is scheduled for deletion in 2 weeks and that they may wish to download it.
+    * Run the `update` query with `update_time` being 13 weeks in the past 2 weeks after the first one and mark the histories as being deleted.
+    * Run the `pgcleanup` scripts and set the disk purge for 10 days.
+* This process should run approximately weekly.
